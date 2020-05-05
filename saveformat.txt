@@ -1,1 +1,76 @@
-NEEDS TO BE AGREED ON
+#blank lines are skipped
+#lines starting with a # are skipped
+#dots are an "no-tile" object
+
+#bag
+(100 tile items)
+
+#lid (empty lid represented by a _?)
+_
+
+#factories
+table
+#can be up to 4 * 4 = 16 tiles
+#always starts with a First player Tile
+
+factory1
+....
+factory2
+....
+factory3
+....
+factory4
+....
+factory5
+....
+
+# player 1
+name
+player_id
+#player buffer
+.
+..
+...
+....
+.....
+
+#wall
+
+.....
+.....
+.....
+.....
+.....
+
+#floor
+.......
+
+#current score
+0
+
+# player 2
+name
+player_id
+#player buffer
+.
+..
+...
+....
+.....
+
+#wall
+
+.....
+.....
+.....
+.....
+.....
+
+#floor
+.......
+
+#current score
+0
+
+#current player turn
+player_id (int)
