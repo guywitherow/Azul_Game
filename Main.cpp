@@ -35,6 +35,9 @@ int main(int argc, char const *argv[])
          //quit
          quit = true;
       } 
+      else if (input == "save") {
+         saveGame("bigtest");
+      }
       else {
          //bad input, try again
          std::cout << "Choice not recognised, please choose an option from the list" << std::endl;
@@ -86,7 +89,7 @@ void saveGame(std::string saveName) {
    int currentLine = 0;
 
    while (currentLine <= 35) {
-      std::string data;
+      std::string data = "a";
 
       if (currentLine == 0) {
          // data = getBag();
@@ -94,37 +97,37 @@ void saveGame(std::string saveName) {
       else if (currentLine == 1) {
          // data = getLid();
       } 
-      else if (currentLine >= 2 && currentLine <= 5) {
+      else if (currentLine >= 2 && currentLine <= 6) {
          // data = getFactory(currentLine - 2);
       } 
-      else if (currentLine == 6) {
+      else if (currentLine == 7) {
          // data = getTable();
       } 
-      else if (currentLine >= 7 && currentLine <= 34) {
+      else if (currentLine >= 8 && currentLine <= 35) {
          //14 lines of data for a player, * 2
          //Player player = getPlayer((currentLine - 7) / 14);
          int currentDataPoint = (currentLine - 7) % 14;
          if (currentDataPoint == 0) {
-            //player.getName();
+            //data = player.getName();
          } 
          else if (currentDataPoint == 1) {
-            //player.getID()????
+            //data = player.getID()????
          } 
          else if (currentDataPoint >= 2 && currentDataPoint <= 6) {
-            //player.getBufferLine(currentDataPoint-3);
+            //data = player.getBufferLine(currentDataPoint-3);
          } 
          else if (currentDataPoint >= 7 && currentDataPoint <= 11) {
-            //player.getWallLine(currentDataPoint-8);
+            //data = player.getWallLine(currentDataPoint-8);
          } 
          else if (currentDataPoint == 12) {
-            //player.getFloor();
+            //data = player.getFloor();
          } 
          else if (currentDataPoint == 13) {
-            //player.getScore();
+            //data = player.getScore();
          }
 
       } 
-      else if (currentLine == 35) {
+      else if (currentLine == 36) {
          // data = getCurrentPlayerID();
       }
 
@@ -142,7 +145,7 @@ void loadGame() {
    //get user input for which file to load
    std::string input;
    std::cout << "Enter the name of the file which you want to load." 
-                  << std::endl << ">";
+                  << std::endl << "> ";
    std::cin >> input;
 
    //open specified file
@@ -153,10 +156,10 @@ void loadGame() {
       //read lines, discarding # or empty lines
       while (getline(loadFile,line)) {
          std::string lineCheck = line;
-         //comments or empty
-         if (line[0] == '#' || line[1] == '\0') {
-            std::cout << "BING" << std::endl;
+         if (line[0] == '#' || line.length() == 0) {
+            std::cout << line.length() << std::endl;
          }
+         
          //read in the data
          else {
             std::string dataIdentifier;
@@ -169,19 +172,19 @@ void loadGame() {
             else if (currentLine == 1) {
                dataIdentifier = "lid";
             } 
-            else if (currentLine >= 2 && currentLine <= 5) {
+            else if (currentLine >= 2 && currentLine <= 6) {
                dataIdentifier = "factory";
                dataIndex = currentLine - 2;
             } 
-            else if (currentLine == 6) {
+            else if (currentLine == 7) {
                dataIdentifier = "table";
             } 
-            else if (currentLine >= 7 && currentLine <= 34) {
+            else if (currentLine >= 8 && currentLine <= 35) {
                //14 lines of data for a player, * 2
                dataIdentifier = "player";
-               dataIndex = currentLine - 7;
+               dataIndex = currentLine - 8;
             } 
-            else if (currentLine == 35) {
+            else if (currentLine == 36) {
                dataIdentifier = "currentTurn";
             }
 
@@ -191,6 +194,7 @@ void loadGame() {
             currentLine++;
          }
       }
+      
       loadFile.close();
    }
    else std::cout << "Unable to open file"; 
@@ -199,35 +203,29 @@ void loadGame() {
 
 void loadData(std::string line, std::string dataIdentifier, int dataIndex) {
    if (dataIdentifier == "bag") {
-      std::cout << line << std::endl;
-      std::cout << " " << dataIdentifier << std::endl;
       //loadBag(line);
    } 
    else if (dataIdentifier == "lid") {
-      std::cout << line << std::endl;
-      std::cout << " " << dataIdentifier << std::endl;
       //loadLid(line);
    } 
    else if (dataIdentifier == "factory") {
-      std::cout << line << std::endl;
-      std::cout << " " << dataIdentifier << std::endl;
       //loadFactory(line,dataIndex);
    } 
    else if (dataIdentifier == "table") {
-      std::cout << line << std::endl;
-      std::cout << " " << dataIdentifier << std::endl;
       //loadTable(line);
    } 
    else if (dataIdentifier == "player") {
-      std::cout << line << std::endl;
-      std::cout << " " << dataIdentifier << std::endl;
-      loadPlayer(line, dataIndex % 14, dataIndex / 14);
+      loadPlayer(line, dataIndex / 14, dataIndex % 14);
    } 
    else if (dataIdentifier == "currentTurn") {
-      std::cout << line << std::endl;
-      std::cout << " " << dataIdentifier << std::endl;
       //setPlayerTurn(line);
    } 
+
+   if (dataIdentifier != "player") {
+      std::cout << line << std::endl;
+      std::cout << "is data for : " << dataIdentifier << std::endl;
+   }
+   
 }
 
 void loadPlayer(std::string line, int playerID, int dataLine) {
@@ -245,27 +243,24 @@ void loadPlayer(std::string line, int playerID, int dataLine) {
    //score
 
    if (dataLine == 0) {
-      std::cout << line << " " << playerID << " " << dataLine << std::endl;
       //player.setName(line);
    } 
    else if (dataLine == 1) {
-      std::cout << line << " " << playerID << " " << dataLine << std::endl;
       //player.setID(line)????
    } 
    else if (dataLine >= 2 && dataLine <= 6) {
-      std::cout << line << " " << playerID << " " << dataLine << std::endl;
       //player.setBufferLine(line,dataLine-3);
    } 
    else if (dataLine >= 7 && dataLine <= 11) {
-      std::cout << line << " " << playerID << " " << dataLine << std::endl;
       //player.setWallLine(line,dataLine-8);
    } 
    else if (dataLine == 12) {
-      std::cout << line << " " << playerID << " " << dataLine << std::endl;
       //player.setFloor();
    } 
    else if (dataLine == 13) {
-      std::cout << line << " " << playerID << " " << dataLine << std::endl;
       //player.setScore();
    }
+
+   std::cout << line << std::endl;
+   std::cout << "is player " << playerID << "'s data for " << dataLine << std::endl;
 }

@@ -3,7 +3,7 @@
 #dots are an "no-tile" object
 #an identifier (text that isnt a comment) is followed by
 
-bag
+#bag
 _
 
 #lid (empty lid represented by a _?)
@@ -28,8 +28,8 @@ _
 _
 
 # player 1
-name
-player_id
+examplename
+1
 #player buffer
 .
 ..
@@ -51,7 +51,7 @@ player_id
 #current score
 0
 
-# player 2
+#player 2
 name
 player_id
 #player buffer
