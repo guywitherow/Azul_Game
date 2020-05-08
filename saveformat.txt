@@ -1,28 +1,31 @@
 #blank lines are skipped
 #lines starting with a # are skipped
 #dots are an "no-tile" object
+#an identifier (text that isnt a comment) is followed by
 
-#bag
-(100 tile items)
+bag
+_
 
 #lid (empty lid represented by a _?)
 _
 
 #factories
-table
 #can be up to 4 * 4 = 16 tiles
 #always starts with a First player Tile
 
-factory1
+# factory1
 ....
-factory2
+# factory2
 ....
-factory3
+# factory3
 ....
-factory4
+# factory4
 ....
-factory5
+# factory5
 ....
+
+#table
+_
 
 # player 1
 name
@@ -73,4 +76,4 @@ player_id
 0
 
 #current player turn
-player_id (int)
+2000
