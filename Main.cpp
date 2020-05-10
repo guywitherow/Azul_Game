@@ -157,7 +157,7 @@ void loadGame() {
       while (getline(loadFile,line)) {
          std::string lineCheck = line;
          if (line[0] == '#' || line.length() == 0) {
-            std::cout << line.length() << std::endl;
+            //do nothin
          }
          
          //read in the data
