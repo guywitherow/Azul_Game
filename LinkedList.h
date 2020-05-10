@@ -22,7 +22,7 @@ int getSize();
 Tile* getTile(int index);
 
 //Based on the index a Tile in the linked list will return this toString
-std::string getTileToString(int index);
+//std::string getTileToString(int index);
 
 //Adding a tile on either front or back of linked list
 void addFront(Tile* tileInfo);
@@ -40,7 +40,7 @@ Tile* transferBack();
 
 private:
 TileNode* head;
-TileNode* Tail;
+TileNode* tail;
 
 //The Temp transfer for when a tile that's used to define the tile to be transferred from one linked list to another
 Tile* transferTemp;
