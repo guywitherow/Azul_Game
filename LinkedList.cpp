@@ -1,122 +1,197 @@
-
+#include <iostream>
 #include "LinkedList.h"
 
-#include <exception>
-#include <iostream>
-#include <fstream>
-#include <limits>
-
-Node::Node(int value, Node* next) :
-   value(value),
-   next(next)
-{}
-
-LinkedList::LinkedList() 
+LinkedList::LinkedList()
 {
-   head = nullptr;
+    this->head = nullptr;
+    this->tail = nullptr;
+    this->transferTemp = nullptr;
 }
 
-LinkedList::LinkedList(const LinkedList& other) 
+LinkedList::~LinkedList()
 {
-   // TODO
+    clear();
 }
 
-LinkedList::~LinkedList() {
-   // TODO
+void LinkedList::clear()
+{
+    if (getSize() != 0)
+    {
+        while (head != nullptr)
+        {
+            TileNode *current = head;
+            head = current->getNextTileNode();
+            delete current;
+        }
+    }
 }
 
-unsigned int LinkedList::size() const {
-   unsigned int count = 0;
-   Node* current = head;
-   while(current != nullptr) {
-      ++count;
-      current = current->next;
-   }
+int LinkedList::getSize()
+{
+    int size = 0;
 
-   return count;
+    if (head == nullptr)
+    {
+        size = 0;
+    }
+    else
+    {
+        TileNode *current = head;
+        while (current != nullptr)
+        {
+            current = current->getNextTileNode();
+            size = size + 1;
+        }
+    }
+    return size;
 }
 
-int LinkedList::get(const unsigned int index) const {
-   int count = 0;
-   Node* current = head;
-   int returnValue = 0;
-   // int returnValue = std::numeric_limits<int>::min();
-   if (index < size()) {
-      while(count < index) {
-         ++count;
-         current = current->next;
-      }
-      returnValue = current->value;
-   } else {
-      throw std::out_of_range("Linked List get - index out of range");
-   }
-   
-   return returnValue;
+Tile *LinkedList::getTile(int index)
+{
+    Tile *tile;
+    TileNode *current = head;
+
+    if (index == 0)
+    {
+        tile = current->getTileData();
+    }
+    else if (index == (getSize() - 1))
+    {
+        current = tail;
+        tile = tail->getTileData();
+    }
+    else
+    {
+        int count = 0;
+
+        while (count < index)
+        {
+            current = current->getNextTileNode();
+            count = count + 1;
+        }
+
+        tile = current->getTileData();
+    }
+    return tile;
 }
 
-// Version of get that returns error "code"
-bool LinkedList::get(const int index, int& returnValue) const {
-   bool error = true;
-   int count = 0;
-   Node* current = head;
-   if (index >= 0 && index < size()) {
-      while(count < index) {
-         ++count;
-         current = current->next;
-      }
-      returnValue = current->value;
-      error = false;
-   }
-   
-   return error;
+void LinkedList::addFront(Tile *tileData)
+{
+    TileNode *newTile = new TileNode(tileData, head);
+
+    if (tail == nullptr)
+    {
+        tail = newTile;
+    }
+    head = newTile;
 }
 
-void LinkedList::addFront(int value) {
-   Node* toAdd = new Node(value, nullptr);
-
-   if (head == nullptr) {
-      head = toAdd;
-   } else {
-      Node* moveBack = head;
-      toAdd->next = moveBack;
-      head = toAdd;
-   }
+void LinkedList::addBack(Tile *tileData)
+{
+    TileNode *newTile = new TileNode(tileData, nullptr);
+    if (head == nullptr)
+    {
+        head = newTile;
+    }
+    else
+    {
+        TileNode *current = head;
+        while (current->getNextTileNode() != nullptr)
+        {
+            current = current->getNextTileNode();
+        }
+        current->setNextTileNode(newTile);
+    }
+    tail = newTile;
 }
 
-void LinkedList::addBack(int value) {
-   Node* toAdd = new Node(value, nullptr);
-
-   if (head == nullptr) {
-      head = toAdd;
-   } else {
-      Node* current = head;
-      while(current->next != nullptr) {
-         current = current->next;
-      }
-
-      current->next = toAdd;
-   }
+void LinkedList::deleteAt(int index)
+{
+    if (index == 0)
+    {
+        deleteFront();
+    }
+    else if (index == (getSize() - 1))
+    {
+        deleteBack();
+    }
+    else
+    {
+        int count = 0;
+        TileNode *current = head;
+        while (count < index)
+        {
+            current = current->getNextTileNode();
+            count = count + 1;
+        }
+        TileNode *before = head;
+        while (before->getNextTileNode() != current)
+        {
+            before = before->getNextTileNode();
+        }
+        before->setNextTileNode(current->getNextTileNode());
+        delete current;
+    }
 }
 
-void LinkedList::removeBack() {
-
-   if (head == nullptr) {
-      //do nothing
-   } else {
-      Node* current = head;
-      while(current->next->next != nullptr) {
-         current = current->next;
-      }
-      delete current->next;
-      current->next = nullptr;
-   }
+void LinkedList::deleteFront()
+{
+    if (head != nullptr)
+    {
+        TileNode *current = head;
+        head = current->getNextTileNode();
+        delete current;
+    }
 }
 
-void LinkedList::removeFront() {
-   // TODO
+void LinkedList::deleteBack()
+{
+    TileNode *end = tail;
+    if (tail != nullptr)
+    {
+        TileNode *current = head;
+        while (current->getNextTileNode() != tail)
+        {
+            current = current->getNextTileNode();
+        }
+        current->setNextTileNode(nullptr);
+        tail = current;
+    }
+
+    delete end;
 }
 
-void LinkedList::clear() {
-   // TODO
+//void LinkedList::tranferTo(int index, LinkedList* list)
+//{
+// }
+Tile* LinkedList::transferFront() {
+
+    Tile* tileToTransfer = nullptr;
+
+    if(head != nullptr) {
+        TileNode* current = head;
+        head = current->getNextTileNode();
+        tileToTransfer = current->getTileData();
+        delete current;
+    }
+    return tileToTransfer;
 }
 
+Tile* LinkedList::transferBack() {
+
+    Tile* tileToTransfer = nullptr;
+
+    TileNode* end = tail;
+    if(tail != nullptr) {
+        TileNode* current = head;
+        while(current->getNextTileNode() != tail) {
+            current = current->getNextTileNode();
+        }
+        tileToTransfer = end->getTileData();
+        current->setNextTileNode(nullptr);
+        tail = current;
+        delete end;
+    }
+
+    return tileToTransfer;
+}

@@ -1,61 +1,49 @@
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H 
 
-class Node {
-public:
-   Node(int value, Node* next);
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
 
-   int value;
-   Node* next;
-};
+#include "TileNode.h"
+#include "Tile.h"
 
-class LinkedList {
-public:
-   LinkedList();
-   LinkedList(const LinkedList& other);
-   ~LinkedList();
+class LinkedList 
+{
+//Consructor
+LinkedList();
 
-   /**
-    * Return the current size of the Linked List.
-    */
-   unsigned int size() const;
+//Deconstructor
+~LinkedList();
 
-   /**
-    * output: Get the value at the given index.
-    * input: Index must be >=0 and < size()
-    * 
-    */
-   int get(const unsigned int index) const;
-   bool get(const int index, int& returnValue) const;
+//will be used in Deconstructor
+void clear();
 
-   /**
-    * Add the value to the back of the Linked List
-    */
-   void addBack(int value);
+//Returns the size of the linked list 
+int getSize();
 
-   /**
-    * Add the value to the front of the Linked List
-    */
-   void addFront(int value);
+//This returns the tile in the linked list based on the index 
+Tile* getTile(int index);
 
-   /**
-    * Remove the value at the back of the Linked List
-    */
-   void removeBack();
+//Based on the index a Tile in the linked list will return this toString
+std::string getTileToString(int index);
 
-   /**
-    * Remove the value at the front of the Linked List
-    */
-   void removeFront();
+//Adding a tile on either front or back of linked list
+void addFront(Tile* tileInfo);
+void addBack(Tile* tileinfo);
 
-   /**
-    * Removes all values from the Linked List
-    */
-   void clear();
+//Deleting/Removing a tile from a linked list
+void deleteAt(int index);
+void deleteFront();
+void deleteBack();
+
+//Transferring a tile from one linked list to another
+void transferTo(int index, LinkedList* list);
+Tile* transferFront();
+Tile* transferBack();
 
 private:
+TileNode* head;
+TileNode* tail;
 
-   Node* head;
+//The Temp transfer for when a tile that's used to define the tile to be transferred from one linked list to another
+Tile* transferTemp;
 };
-
-#endif // LINKED_LIST_H
+#endif //LINKEDLIST_H//
