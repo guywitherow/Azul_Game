@@ -3,16 +3,16 @@
 
 class Bag {
    public:
-   Bag(int seed);
-   ~Bag();
+      Bag(int seed);
+      ~Bag();
 
-   int size();
+      int size();
 
-   void shuffle();
+      void shuffle();
 
-   Tile getTopTile();
+      Tile getTopTile();
 
    private:
 
-   LinkedList tiles;
+      LinkedList tiles;
 };

@@ -1,14 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <time.h> 
+#include "Player.h"
+#include "Factory.h"
+#include "Types.h"
+#include "Bag.h"
 
 void printMenu();
 void printCredits();
 void loadGame();
-void saveGame(std::string saveName);
+void saveGame(std::string saveName);\
+void game(int seed);
 void loadData(std::string, std::string, int);
 void loadPlayer(std::string, int, int);
-std::string takeMenuInput();
+std::string takeUserInput();
 
 int main(int argc, char const *argv[])
 {
@@ -16,12 +22,24 @@ int main(int argc, char const *argv[])
    bool quit = false;
    printMenu();
    while (!quit) {
-      std::string input = takeMenuInput();
+      std::string input = takeUserInput();
       
       //handle input
       if (input == "1") {
+         int seed = 0;
          //new game
+         if (argc == 1) {
+            //TODO check seed is a valid seed
+            srand((int)argv[1]);
+         }
+         else {
+            //generate a random seed
+            srand(time(0));
+         }
 
+         seed = rand();
+         game(seed);
+         
       } 
       else if (input == "2") {
          //load game
@@ -73,7 +91,7 @@ void printCredits() {
    std::cout << "----------------------------------" << std::endl;
 }
 
-std::string takeMenuInput() {
+std::string takeUserInput() {
    //TODO Ensure user input is valid
    std::string input;
    //user input space is indicated by an arrow
@@ -229,6 +247,7 @@ void loadData(std::string line, std::string dataIdentifier, int dataIndex) {
 }
 
 void loadPlayer(std::string line, int playerID, int dataLine) {
+
    //Player player = getPlayer(playerID);
    //data loaded in order
    //name
@@ -263,4 +282,59 @@ void loadPlayer(std::string line, int playerID, int dataLine) {
 
    std::cout << line << std::endl;
    std::cout << "is player " << playerID << "'s data for " << dataLine << std::endl;
+}
+
+void game(int seed) {
+   std::cout << "Starting a new game" << std::endl;
+
+   //bag init
+   Bag* bag = new Bag(seed);
+
+   Factory* table = new Factory();
+
+   Factory* factories[NUM_FACTORIES];
+   for (int i = 0; i < NUM_FACTORIES; i++) {
+      factories[i] = new Factory();
+   }
+
+   //player names
+
+   std::cout << "Enter a name for player 1" << std::endl << std::endl;
+   std::string name = takeUserInput();
+   Player* player1 = new Player(name);
+
+   std::cout << "Enter a name for player 2" << std::endl << std::endl;
+   name = takeUserInput();
+   Player* player2 = new Player(name);
+
+   std::cout << "Let's Play!" << std::endl << std::endl;
+
+   bool tileLoop = true;
+   while (tileLoop) {
+      printFactories(*factories);
+
+      //print factories
+      //print player board
+      //selection
+      //player 2 loops
+
+      //loop until we have no tiles on table
+      //factories check
+      for (int i = 0; i < NUM_FACTORIES; i++) {
+         //check all factories
+         //tileLoop = factories[i].hasTiles()
+         //if (tileLoop == true) {
+         //    i = 5;
+         //}
+      }
+
+
+      //give player who takes from table first the "first player tag"
+   }
+}
+
+void printFactories(Factory* factories) {
+   for (int i = 0; i < NUM_FACTORIES; i++) {
+      factories[i].printFactory();
+   }
 }
