@@ -3,20 +3,26 @@
 
 #include "PlayerWall.h"
 #include "Tile.h"
+#include <string>
 
 class Player {
 
- public:
-      Player(std::string name);
-      ~Player();
+   public:
+   Player(std::string name);
+   ~Player();
 
-      void shuffle();
+   std::string getName();
+   PlayerWall getWall();
+   int getScore();
 
-      Tile getTopTile();
+   void setScore(int score);
+   void setWall(PlayerWall wall);
 
    private:
 
-      PlayerWall wall;
+   PlayerWall wall;
+   std::string playerName;
+   int score;
 
 
 

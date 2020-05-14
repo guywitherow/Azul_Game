@@ -7,6 +7,7 @@
 
 class LinkedList 
 {
+   public:
    //Consructor
    LinkedList();
 
