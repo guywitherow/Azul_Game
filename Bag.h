@@ -1,3 +1,6 @@
+#ifndef BAG_H
+#define BAG_H
+
 #include "Tile.h"
 #include "LinkedList.h"
 
@@ -13,6 +16,6 @@ class Bag {
       Tile getTopTile();
 
    private:
-
       LinkedList tiles;
 };
+#endif

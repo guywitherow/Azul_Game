@@ -2,6 +2,7 @@
 #define TILENODE_H
 
 #include "Tile.h"
+#include <string>
 
 class TileNode
 {

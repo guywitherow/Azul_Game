@@ -1,3 +1,6 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include "PlayerWall.h"
 #include "Tile.h"
 
@@ -18,3 +21,5 @@ class Player {
 
 
 };
+
+#endif
