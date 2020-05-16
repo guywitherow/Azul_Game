@@ -1,5 +1,7 @@
 #include "PlayerWall.h"
 
+
+//set up empty buffer and wall and floor
 PlayerWall::PlayerWall() {
 
 }
@@ -9,24 +11,38 @@ PlayerWall::~PlayerWall() {
 }
 
 //get a line of the storage
-Tile* getStorageLine(int line) {
-
-   return nullptr;
+std::vector<Tile*> PlayerWall::getStorageLine(int line) {
+   return storage[line];
 }
 
 //get a line of the wall by direction
-Tile* getWallLine(int line, Direction direction) {
+Tile* PlayerWall::getWallLine(int line, Direction direction) {
 
-   return nullptr;
+   Tile* returnLine = nullptr;
+
+   if (direction == VERTICAL) {
+      for (int i = 0; i < WALL_DIM; i++) {
+         returnLine[i] = *wall[i][line];
+      }
+   }
+   else {
+      returnLine = *wall[line];
+   }
+
+   return returnLine;
 }
 
 //get the floor line, for scoring and for changing
-Tile* getFloorLine() {
-   return nullptr;
+Tile* PlayerWall::getFloorLine() {
+   return *floor;
+}
+
+std::string PlayerWall::getPlayerWall() {
+   return "";
 }
 
 //add tiles to storage line, any excess go to the floor
-void addToStorageLine(Tile* tiles, int line) {
+void PlayerWall::addToStorageLine(Tile* tiles, int line) {
 
 }
 
@@ -36,22 +52,22 @@ void addToStorageLine(Tile* tiles, int line) {
 //adjacent tiles
 //if a complete horizontal line is reached, we need to flag game over
 //(BASICLY A SCORE FUNCTION)
-void moveStorageToWall() {
+void PlayerWall::moveStorageToWall() {
 
 }
 
 
 //clears storage
-void clearStorage() {
+void PlayerWall::clearStorage() {
 
 }
 
 //clears wall
-void clearWall() {
+void PlayerWall::clearWall() {
 
 }
 
 //clears floor
-void clearFloor() {
+void PlayerWall::clearFloor() {
 
 }

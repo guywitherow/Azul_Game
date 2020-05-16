@@ -1,12 +1,12 @@
 #include "Tile.h"
 
 Tile::Tile(TileType type){
-
    this->type = type;
-
 }
 
-Tile::~Tile() {}
+Tile::~Tile() {
+   //tile only has tiletype which is a char, automaticlly deleted
+}
 
 std::string Tile::tileToString() {
    std::string typeString;

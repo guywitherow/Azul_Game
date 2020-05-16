@@ -4,7 +4,6 @@
 Bag::Bag(int seed) {
 
    for (int i = 0; i < 100; i++) {
-
       Tile* tileData;
       if (i < 20) {
          tileData = new Tile(RED);
@@ -21,7 +20,6 @@ Bag::Bag(int seed) {
       else {
          tileData = new Tile(YELLOW);
       }
-
       tiles.addBack(tileData);
    }
 
@@ -30,24 +28,24 @@ Bag::Bag(int seed) {
 }
 
 Bag::~Bag() {
-
-//delete all tiles in bag using linkedlist deconstructor
-
+   tiles.clear();
 }
 
 //how many tiles left?
-int size() {
-   return 0;
+int Bag::size() {
+   return tiles.getSize();
 }
 
 //merhawi's shuffle function
-void shuffle() {
+void Bag::shuffle() {
 
 }
 
 //get the backmost tile, or the front
-Tile getTopTile() {
-   Tile tile(RED);
-   return tile;
+Tile Bag::getTopTile() {
+   Tile returnTile = *tiles.getTile(0);
+   std::cout << returnTile.tileToString() << std::endl; 
+   tiles.deleteBack();
+   return returnTile;
 }
 

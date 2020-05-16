@@ -29,8 +29,8 @@ void TileNode::setNextTileNode(TileNode *nextTileNode)
     this->nextTileNode = nextTileNode;
 }
 
-//We can use this to get a tile tostring once we've set up tile.cpp class
-// std::string TileNode::getTileDataToString(Tile* tileData) {
-//     std::string statement = tileData->tileToString();
-//     return statement;
-// }
+// We can use this to get a tile tostring once we've set up tile.cpp class
+std::string TileNode::getTileDataToString(Tile* tileData) {
+    std::string statement = tileData->tileToString();
+    return statement;
+}
