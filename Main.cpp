@@ -11,11 +11,11 @@
 void printMenu();
 void printCredits();
 void loadGame();
-void saveGame(std::string saveName);\
+void saveGame(std::string saveName);
 void game(int seed);
 void loadData(std::string, std::string, int);
 void loadPlayer(std::string, int, int);
-void printFactories(Factory* factories);
+void printFactories(Factory* factories[NUM_FACTORIES], Factory* table);
 std::string takeUserInput();
 
 int main(int argc, char const *argv[])
@@ -293,61 +293,81 @@ void game(int seed) {
 
    //bag init
    Bag* bag = new Bag(seed);
+   bag->fill();
    // bag->shuffle();
-   // Factory* table = new Factory();
 
-   // Factory* factories[NUM_FACTORIES];
+   Factory* table = new Factory();
+
+   Factory* factories[NUM_FACTORIES];
    for (int i = 0; i < NUM_FACTORIES; i++) {
-      // factories[i] = new Factory();
+      factories[i] = new Factory();
       for (int j = 0; j < 4; j++) {
-         // factories[i]->addTile(bag->getTopTile());
+         factories[i]->addTile(bag->getTopTile());
       }
    }
 
    //player names
 
    std::cout << "Enter a name for player 1" << std::endl << std::endl;
-   // std::string name = takeUserInput();
-   // Player* player1 = new Player(name);
+   std::string name = takeUserInput();
+   Player* player1 = new Player(name);
 
-   std::cout << "Enter a name for player 2" << std::endl << std::endl;
-   // name = takeUserInput();
-   // Player* player2 = new Player(name);
+   std::cout << std::endl << std::endl << "Enter a name for player 2" << std::endl << std::endl;
+   name = takeUserInput();
+   Player* player2 = new Player(name);
 
    std::cout << "Let's Play!" << std::endl << std::endl;
 
-   // bool tileLoop = true;
-   // while (tileLoop) {
-   //    // printFactories(*factories);
+   bool tileLoop = true;
+   while (tileLoop) {
+      printFactories(factories, table);
 
-   //    //print factories
-   //    //print player board
-   //    //selection
-   //    //player 2 loops
+      //print factories
+      //print player board
+      //selection
+      //player 2 loops
 
-   //    //loop until we have no tiles on table
-   //    //factories check
-   //    for (int i = 0; i < NUM_FACTORIES; i++) {
-   //       //check all factories
-   //       //tileLoop = factories[i].hasTiles()
-   //       //if (tileLoop == true) {
-   //       //    i = 5;
-   //       //}
-   //    }
+      //loop until we have no tiles on table
+      //factories check
+      for (int i = 0; i < NUM_FACTORIES; i++) {
+         //check all factories
+         //tileLoop = factories[i].hasTiles()
+         //if (tileLoop == true) {
+         //    i = 5;
+         //}
+      }
 
-
-   //    //give player who takes from table first the "first player tag"
-   // }
+      tileLoop = false;
+      //give player who takes from table first the "first player tag"
+   }
    std::cout << "Game Over." << std::endl;
+
+   //delete!!!
    delete bag;
-   // delete player1;
-   for (int i = 0; i < 5; i++) {
-      // delete factories[i];
+   delete player1;
+   delete player2;
+   delete table;
+   for (int i = 0; i < NUM_FACTORIES; i++) {
+      delete factories[i];
    }
 }
 
-void printFactories(Factory* factories) {
+void printFactories(Factory* factories[NUM_FACTORIES], Factory* table) {
+
+   std::cout << "Factories: " << std::endl << "0:";
+   table->printFactory();
+   std::cout << std::endl;
+
    for (int i = 0; i < NUM_FACTORIES; i++) {
-      factories[i].printFactory();
+      
+      if (factories != nullptr) {
+         std::cout << i + 1 << ": ";
+         factories[i]->printFactory();
+      }
+      std::cout << std::endl;
    }
+}
+
+void printPlayerWall(Player* player) {
+   std::cout << "Mosaic for " << player->getName() << ":" << std::endl;
 }

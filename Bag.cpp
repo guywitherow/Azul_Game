@@ -3,6 +3,23 @@
 
 Bag::Bag(int seed) {
 
+}
+
+Bag::~Bag() {
+   tiles.clear();
+}
+
+//how many tiles left?
+int Bag::size() {
+   return tiles.getSize();
+}
+
+//merhawi's shuffle function
+void Bag::shuffle() {
+
+}
+
+void Bag::fill() {
    for (int i = 0; i < 100; i++) {
       Tile* tileData;
       if (i < 20) {
@@ -22,29 +39,11 @@ Bag::Bag(int seed) {
       }
       tiles.addBack(tileData);
    }
-
-   //shuffle bag
-
-}
-
-Bag::~Bag() {
-   tiles.clear();
-}
-
-//how many tiles left?
-int Bag::size() {
-   return tiles.getSize();
-}
-
-//merhawi's shuffle function
-void Bag::shuffle() {
-
 }
 
 //get the backmost tile, or the front
 Tile Bag::getTopTile() {
    Tile returnTile = *tiles.getTile(0);
-   std::cout << returnTile.tileToString() << std::endl; 
    tiles.deleteBack();
    return returnTile;
 }

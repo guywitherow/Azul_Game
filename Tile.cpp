@@ -34,6 +34,32 @@ std::string Tile::tileToString() {
    return typeString;
 }
 
+char Tile::tileToChar() {
+   char typeChar = ' ';
+   if (type == RED) {
+      typeChar = 'R';
+   }
+   else if (type == YELLOW) {
+      typeChar = 'Y';
+   }
+   else if (type == LIGHT_BLUE) {
+      typeChar = 'L';
+   }
+   else if (type == DARK_BLUE) {
+      typeChar = 'B';
+   }
+   else if (type == BLACK) {
+      typeChar = 'U';
+   }
+   else if (type == NO_TILE) {
+      typeChar = '.';
+   }
+   else if (type == FIRST_PLAYER) {
+      typeChar = 'F';
+   }
+   return typeChar;
+}
+
 TileType Tile::getType() {
    return type;
 }

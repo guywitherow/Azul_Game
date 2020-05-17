@@ -11,8 +11,10 @@ Factory::~Factory() {
 }
 
 void Factory::printFactory() {
-   for (auto i = tiles.begin(); i != tiles.end(); i++) {
-      std::cout << i->getType();
+   if (tileCount > 0) {
+      for (auto i = tiles.begin(); i != tiles.end(); i++) {
+         std::cout << i->tileToChar() << " ";
+      }
    }
 }
    
@@ -24,13 +26,19 @@ int Factory::removeTile(TileType type) {
          tiles.erase(i);
       }
    }
+   tileCount--;
    return tileCount;
 }
 
 void Factory::addTile(Tile tile) {
    tiles.push_back(tile);
+   tileCount++;
 }
 
 void Factory::clearFactory() {
    //remove all from the vector
+}
+
+int Factory::getTileCount() {
+   return tileCount;
 }

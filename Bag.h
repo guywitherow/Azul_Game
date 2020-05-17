@@ -10,6 +10,7 @@ class Bag {
       ~Bag();
 
       int size();
+      void fill();
       void shuffle();
       Tile getTopTile();
       LinkedList getAllTiles();

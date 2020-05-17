@@ -14,9 +14,11 @@ class Factory {
    void addTile(Tile tile);
    void clearFactory();
    void printFactory();
+   int getTileCount();
 
    private:
    std::vector<Tile> tiles;
+   int tileCount = 0;
 
 };
 

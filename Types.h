@@ -6,18 +6,18 @@
 #define FLOOR_DIM 7
 
 enum TileType {
-   RED = 'R',
-   YELLOW = 'Y',
-   DARK_BLUE = 'B',
-   LIGHT_BLUE = 'L',
-   BLACK = 'U',
-   FIRST_PLAYER = 'F',
-   NO_TILE = '.'
+   RED,
+   YELLOW,
+   DARK_BLUE,
+   LIGHT_BLUE,
+   BLACK,
+   FIRST_PLAYER,
+   NO_TILE
    };
 
 enum Direction {
-   VERTICAL = 'V',
-   HORIZONTAL = 'H'
+   VERTICAL,
+   HORIZONTAL
 };
 
 

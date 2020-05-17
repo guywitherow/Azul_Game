@@ -37,6 +37,19 @@ Tile* PlayerWall::getFloorLine() {
    return *floor;
 }
 
+//return a string representation for printing of the buffer, wall and floor
+//as shown in the documentation
+/*
+      Mosaic for <player-name>:
+      *** this bit
+      1:         . || . . R . .
+      2:       Y Y || . . . R .
+      3:     B B B || . . . . .
+      4:   . . . . || . . L . .
+      5: . . U U U || . . . . .
+      broken: F Y
+      ***
+*/
 std::string PlayerWall::getPlayerWall() {
    return "";
 }

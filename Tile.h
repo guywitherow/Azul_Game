@@ -18,6 +18,7 @@ class Tile {
 
    //Returns a toString of the Tile
    std::string tileToString();
+   char tileToChar();
 
    TileType getType();
 
