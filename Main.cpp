@@ -370,4 +370,5 @@ void printFactories(Factory* factories[NUM_FACTORIES], Factory* table) {
 
 void printPlayerWall(Player* player) {
    std::cout << "Mosaic for " << player->getName() << ":" << std::endl;
+   std::cout << player->getWall().getPlayerWall() << std::endl;
 }

@@ -51,7 +51,50 @@ Tile* PlayerWall::getFloorLine() {
       ***
 */
 std::string PlayerWall::getPlayerWall() {
-   return "";
+   std::string returnString = "";
+   for (int i = 0; i < WALL_DIM; i++) {
+      //get data
+      std::vector<Tile*> bufferLine = getStorageLine(i);
+      Tile* wallLine = getWallLine(i, HORIZONTAL);
+
+      //construct strings
+
+      std::string bufferLineString = "";
+      for (int j = i; j < 5; j++) {
+         bufferLineString =+ " ";
+      }
+      for (int j = 0; j < bufferLine.size(); j++) {
+         bufferLineString =+ bufferLine.at(j)->tileToChar();
+      }
+      
+
+      std::string wallLineString = "";
+      for (int j = 0; j < WALL_DIM; j++) {
+
+      }
+
+
+      //add to super return string
+
+
+
+      returnString += i+1 + ":";
+      returnString += bufferLineString;
+      returnString += " || ";
+      returnString += wallLineString;
+      returnString += '\n';
+   }
+
+   std::string floor = "";
+
+   Tile* floorTiles = getFloorLine();
+
+   
+
+   returnString += "broken: ";
+   
+
+   return returnString;
 }
 
 //add tiles to storage line, any excess go to the floor
