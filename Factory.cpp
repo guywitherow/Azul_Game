@@ -17,15 +17,18 @@ void Factory::printFactory() {
 }
    
 int Factory::removeTile(TileType type) {
+   int tileCount = 0;
    for (auto i = tiles.begin(); i != tiles.end(); i++) {
       if (i->getType() == type) {
-         //add 1, remove this tile or (change it to a no-tile?)
+         tileCount++;
+         tiles.erase(i);
       }
    }
+   return tileCount;
 }
 
 void Factory::addTile(Tile tile) {
-   //add a tile
+   tiles.push_back(tile);
 }
 
 void Factory::clearFactory() {
