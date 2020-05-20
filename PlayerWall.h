@@ -12,12 +12,11 @@ class PlayerWall {
    PlayerWall();
    ~PlayerWall();
 
-   std::vector<Tile*> getStorageLine(int line);
+   std::vector<Tile> getStorageLine(int line);
    Tile* getWallLine(int line, Direction direction);
    Tile* getFloorLine();
 
-   std::string getPlayerWall();
-
+   std::string getPlayerWallString();
    void addToStorageLine(Tile* tiles, int line);
 
    void moveStorageToWall();
@@ -27,9 +26,9 @@ class PlayerWall {
    void clearFloor();
 
   private:
-   std::vector<Tile*> storage[5];
-   Tile* wall[WALL_DIM][WALL_DIM];
-   Tile* floor[FLOOR_DIM];
+   std::vector<Tile> storage[5];
+   Tile wall[WALL_DIM][WALL_DIM];
+   Tile floor[FLOOR_DIM];
 
 };
 

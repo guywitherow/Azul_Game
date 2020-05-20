@@ -1,86 +1,97 @@
 #include "PlayerWall.h"
 
-
 //set up empty buffer and wall and floor
 PlayerWall::PlayerWall() {
+   //wall needs to have all tiles init, otherwise we will get a
+   //nullptr 
+  for (int i = 0; i < WALL_DIM; i++) {
+     for (int j = 0; j < WALL_DIM; j++) {
+        wall[i][j] = Tile();
+     }
+  }
+   
+   for (int i = 0; i < WALL_DIM; i++) {
+      int size = i + 1;
+      storage[i].resize(size, Tile());
+   }
 
+   //so we can check it's size against the expected
+   //floor does need to be init
+   for (int i = 0; i < FLOOR_DIM; i++) {
+      floor[i] = Tile();
+   }
 }
 
 PlayerWall::~PlayerWall() {
-   
+
 }
 
 //get a line of the storage
-std::vector<Tile*> PlayerWall::getStorageLine(int line) {
+std::vector<Tile> PlayerWall::getStorageLine(int line) {
    return storage[line];
 }
 
 //get a line of the wall by direction
 Tile* PlayerWall::getWallLine(int line, Direction direction) {
 
-   Tile* returnLine = nullptr;
+   static Tile returnLine[WALL_DIM];
 
-   if (direction == VERTICAL) {
+   if (direction == Direction::VERTICAL) {
       for (int i = 0; i < WALL_DIM; i++) {
-         returnLine[i] = *wall[i][line];
+         returnLine[i] = wall[i][line];
       }
    }
    else {
-      returnLine = *wall[line];
+      for (int i = 0; i < WALL_DIM; i++) {
+         returnLine[i] = wall[line][i];
+      }
    }
 
    return returnLine;
 }
 
 //get the floor line, for scoring and for changing
-Tile* PlayerWall::getFloorLine() {
-   return *floor;
+Tile * PlayerWall::getFloorLine() {
+   static Tile returnLine[FLOOR_DIM];
+   for (int i = 0; i < FLOOR_DIM; i++) {
+      returnLine[i] = floor[i];
+   }
+
+   return returnLine;
 }
 
 //return a string representation for printing of the buffer, wall and floor
 //as shown in the documentation
 /*
-      Mosaic for <player-name>:
-      *** this bit
-      1:         . || . . R . .
-      2:       Y Y || . . . R .
-      3:     B B B || . . . . .
-      4:   . . . . || . . L . .
-      5: . . U U U || . . . . .
-      broken: F Y
-      ***
+* This method retreives the wall as a string
 */
-std::string PlayerWall::getPlayerWall() {
+std::string PlayerWall::getPlayerWallString() {
    std::string returnString = "";
    for (int i = 0; i < WALL_DIM; i++) {
+      int lineNumber = i + 1;
+      returnString += std::to_string(lineNumber);
+      returnString += ":";
+      
       //get data
-      std::vector<Tile*> bufferLine = getStorageLine(i);
-      Tile* wallLine = getWallLine(i, HORIZONTAL);
+      std::vector<Tile> bufferLine = getStorageLine(i);
+      Tile* wallLine = getWallLine(i, Direction::HORIZONTAL);
 
-      //construct strings
-
-      std::string bufferLineString = "";
+      //construct string
       for (int j = i; j < 5; j++) {
-         bufferLineString =+ " ";
+         returnString += " ";
       }
-      for (int j = 0; j < bufferLine.size(); j++) {
-         bufferLineString =+ bufferLine.at(j)->tileToChar();
+
+      for (std::size_t i = 0; i < bufferLine.size(); ++i) {
+         returnString += bufferLine.at(i).tileToChar();
       }
       
+      returnString += " || ";
 
       std::string wallLineString = "";
       for (int j = 0; j < WALL_DIM; j++) {
-
+         returnString += wallLine[j].tileToChar();
       }
 
-
-      //add to super return string
-
-
-
-      returnString += i+1 + ":";
-      returnString += bufferLineString;
-      returnString += " || ";
       returnString += wallLineString;
       returnString += '\n';
    }
@@ -89,11 +100,12 @@ std::string PlayerWall::getPlayerWall() {
 
    Tile* floorTiles = getFloorLine();
 
-   
-
    returnString += "broken: ";
    
-
+   for (int j = 0; j < 7; j++) {
+      returnString += floorTiles[j].tileToChar();
+   }
+   returnString += '\n';
    return returnString;
 }
 

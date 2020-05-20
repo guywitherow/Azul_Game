@@ -5,19 +5,19 @@
 #define WALL_DIM 5
 #define FLOOR_DIM 7
 
-enum TileType {
-   RED,
-   YELLOW,
-   DARK_BLUE,
-   LIGHT_BLUE,
-   BLACK,
-   FIRST_PLAYER,
-   NO_TILE
+enum class TileType {
+   RED = 'R',
+   YELLOW = 'Y',
+   DARK_BLUE = 'B',
+   LIGHT_BLUE = 'L',
+   BLACK = 'U',
+   FIRST_PLAYER = 'F',
+   NO_TILE = '.'
    };
 
-enum Direction {
-   VERTICAL,
-   HORIZONTAL
+enum class Direction {
+   VERTICAL = 'V',
+   HORIZONTAL = 'H'
 };
 
 

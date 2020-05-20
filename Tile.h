@@ -8,6 +8,7 @@
 class Tile {
    public:
    //Tile constructor 
+   Tile();
    Tile(TileType type);
 
    //Deconstructor

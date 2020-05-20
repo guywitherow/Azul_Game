@@ -23,19 +23,19 @@ void Bag::fill() {
    for (int i = 0; i < 100; i++) {
       Tile* tileData;
       if (i < 20) {
-         tileData = new Tile(RED);
+         tileData = new Tile(TileType::RED);
       }
       else if (i < 40) {
-         tileData = new Tile(DARK_BLUE);
+         tileData = new Tile(TileType::DARK_BLUE);
       }
       else if (i < 60) {
-         tileData = new Tile(LIGHT_BLUE);
+         tileData = new Tile(TileType::LIGHT_BLUE);
       }
       else if (i < 80) {
-         tileData = new Tile(BLACK);
+         tileData = new Tile(TileType::BLACK);
       }
       else {
-         tileData = new Tile(YELLOW);
+         tileData = new Tile(TileType::YELLOW);
       }
       tiles.addBack(tileData);
    }
