@@ -31,13 +31,20 @@ Bag::Bag(int seed) {
 
 
 Bag::~Bag() {
-   tiles.clear();
+   clear();
+}
+
+void Bag::clear() {
+    delete tempLinkedList;
+    delete bagLinkedList;
 }
 
 //how many tiles left?
 int Bag::size() {
    return tiles.getSize();
 }
+
+
 
 //merhawi's shuffle function
 void shuffle() {
@@ -50,7 +57,7 @@ void shuffle() {
         int size = tempLinkedList->getSize() - 1;
         std::uniform_int_distribution<int> uniform_dist(min, size);
         index = uniform_dist(engine);
-        tempLinkedList->transferAt(index,bagLinkedList);
+        tempLinkedList->transferTo(index,bagLinkedList);
     }
 
 }
@@ -62,3 +69,4 @@ Tile Bag::getTopTile() {
    tiles.deleteBack();
    return returnTile;
 }
+

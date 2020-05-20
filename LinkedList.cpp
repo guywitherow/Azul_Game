@@ -161,6 +161,34 @@ void LinkedList::deleteBack()
     delete end;
 }
 
+void LinkedList::transferTo(int index, LinkedList* randomList) {
+
+    if(index == 0) {
+        transferTemp = transferFront();
+    }
+    else if(index == (getSize() - 1)) {
+        transferTemp = transferBack();
+    }
+    else {
+        int count = 0;
+        TileNode* current = head;
+        while(count < index) {
+            current = current->getNextTileNode();
+            count = count + 1;
+        }
+        TileNode* before = head;
+        while(before->getNextTileNode() != current) {
+            before = before->getNextTileNode();
+        }
+        before->setNextTileNode(current->getNextTileNode());
+        transferTemp = current->getTileData();
+        delete current;
+    }
+
+    delete transferTemp;
+    transferTemp = nullptr;
+}
+
 //void LinkedList::tranferTo(int index, LinkedList* list)
 //{
 // }

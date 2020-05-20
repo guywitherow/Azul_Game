@@ -5,24 +5,25 @@
 #include "LinkedList.h"
 #include <random>
 
-class Bag {
-   public:
-      Bag(int seed);
-      ~Bag();
+class Bag
+{
+public:
+   Bag(int seed);
+   ~Bag();
+   void clear();
+   int size();
+   void shuffle();
+   Tile getTopTile();
+   LinkedList getAllTiles();
 
-      int size();
-      void shuffle();
-      Tile getTopTile();
-      LinkedList getAllTiles();
+private:
+   LinkedList tiles;
 
-   private:
-      LinkedList tiles;
-
-    // This Generates a temporary linkedlist that contains all the tiles in order 
-    LinkedList* tempLinkedList;
+   // This Generates a temporary linkedlist that contains all the tiles in order
+   LinkedList *tempLinkedList;
 
    // Randomizes the Tiles in the temporary linkedlist and stores them in this linkedlist.
    // This linkedlist will be the main linkedlist where players take tiles from.
-    LinkedList* bagLinkedList;
+   LinkedList *bagLinkedList;
 };
 #endif
