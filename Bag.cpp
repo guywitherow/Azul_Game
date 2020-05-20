@@ -17,7 +17,7 @@ int Bag::size() {
 }
 
 //merhawi's shuffle function
-void shuffle() {
+void Bag::shuffle() {
    int min = 0;
    int max = tempLinkedList->getSize();
    int index = -1;
@@ -27,7 +27,7 @@ void shuffle() {
       int size = tempLinkedList->getSize() - 1;
       std::uniform_int_distribution<int> uniform_dist(min, size);
       index = uniform_dist(engine);
-      tempLinkedList->transferAt(index,bagLinkedList);
+      tempLinkedList->transferTo(index,bagLinkedList);
    }
 
 }
