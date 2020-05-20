@@ -2,8 +2,10 @@
 #include "LinkedList.h"
 
 Bag::Bag(int seed) {
-
+   tempLinkedList = new LinkedList();
+   bagLinkedList = new LinkedList();
 }
+
 
 Bag::~Bag() {
    tiles.clear();
@@ -15,7 +17,18 @@ int Bag::size() {
 }
 
 //merhawi's shuffle function
-void Bag::shuffle() {
+void shuffle() {
+   int min = 0;
+   int max = tempLinkedList->getSize();
+   int index = -1;
+   std::random_device engine;
+
+   for(int i = 0; i < max; ++i) {
+      int size = tempLinkedList->getSize() - 1;
+      std::uniform_int_distribution<int> uniform_dist(min, size);
+      index = uniform_dist(engine);
+      tempLinkedList->transferAt(index,bagLinkedList);
+   }
 
 }
 
@@ -47,4 +60,3 @@ Tile Bag::getTopTile() {
    tiles.deleteBack();
    return returnTile;
 }
-
