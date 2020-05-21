@@ -1,8 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <time.h> 
 #include <cstdlib>
+#include <iterator>
 #include "Player.h"
 #include "Factory.h"
 #include "Types.h"
@@ -22,7 +24,7 @@ void loadData(std::string, std::string, int);
 void loadPlayer(std::string, int, int);
 void printFactories(Factory* factories[NUM_FACTORIES], Factory* table);
 void printPlayerWall(Player* player);
-std::string takeUserInput();
+std::vector<std::string> takeUserInput();
 
 int main(int argc, char const *argv[])
 {
@@ -30,7 +32,7 @@ int main(int argc, char const *argv[])
    bool quit = false;
    printMenu();
    while (!quit) {
-      std::string input = takeUserInput();
+      std::string input = takeUserInput().at(0);
       
       //handle input
       if (input == "1") {
@@ -94,11 +96,11 @@ void game(int seed) {
    //player names
 
    std::cout << "Enter a name for player 1" << std::endl << std::endl;
-   std::string name = takeUserInput();
+   std::string name = takeUserInput().at(0);
    Player* player1 = new Player(name);
 
    std::cout << "Enter a name for player 2" << std::endl << std::endl;
-   name = takeUserInput();
+   name = takeUserInput().at(0);
    Player* player2 = new Player(name);
 
    std::cout << "Let's Play!" << std::endl << std::endl;
@@ -136,11 +138,22 @@ void game(int seed) {
 
 
 void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* player) {
-   std::string turn = takeUserInput();
-   if (turn == "help" || turn == "h") {
+   std::vector<std::string> turn = takeUserInput();
+   std::string command = turn.at(0);
+   if (command == "help" || command == "h") {
       std::cout << "This is where you take your turn. Use the command 'turn', ";
       std::cout << "along with your selections to take your turn!" << std::endl;
-      std::cout << "eg: '> turn " << std::endl;
+      std::cout << "eg: '> turn 3 L 3' moves all light blue tiles, from ";
+      std::cout << "factory 3, and puts them in storage line 3" << std::endl;
+   }
+   else if (command == "turn") {
+      //tkae a player's turn
+   }
+   else if (command == "quit") {
+      //exit the game
+   }
+   else if (command == "save") {
+      //save the game
    }
 }
 
@@ -212,14 +225,22 @@ void printReferenceBoard() {
    std::cout << "Please make moves using the format 'turn <factory number> <tile color letter> <storage row>" << std::endl;
 }
 
-std::string takeUserInput() {
+std::vector<std::string> takeUserInput() {
    //TODO Ensure user input is valid
    std::string input;
    //user input space is indicated by an arrow
    std::cout << std::endl << "> ";
    std::cin >> input;
-   return input;
+
+   //break string into arguments
+   std::stringstream stream(input);
+   std::istream_iterator<std::string> begin(stream);
+   std::istream_iterator<std::string> end;
+   std::vector<std::string> arguments(begin, end);
+
+   return arguments;
 }
+
 
 void saveGame(std::string saveName) {
 
