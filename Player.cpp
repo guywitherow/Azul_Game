@@ -4,12 +4,12 @@
 
 Player::Player(std::string name) {
    this->playerName = name;
+   this->wall = new PlayerWall();
 }
 
 Player::~Player()
 {
-
-
+ delete this->wall;
 }
 
 
@@ -18,7 +18,7 @@ std::string Player::getName() {
 }
 
 PlayerWall Player::getWall() {
-   return this->wall;
+   return *wall;
 }
 
 int Player::getScore() {
@@ -29,6 +29,7 @@ void Player::setScore(int score) {
    this->score = score;
 }
 
-void Player::setWall(PlayerWall wall) {
+void Player::setWall(PlayerWall* wall) {
+   delete this->wall;
    this->wall = wall;
 }

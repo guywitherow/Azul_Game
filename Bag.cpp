@@ -2,31 +2,28 @@
 #include "LinkedList.h"
 
 Bag::Bag(int seed) {
-    tempLinkedList = new LinkedList();
-    bagLinkedList = new LinkedList();
+   tempLinkedList = new LinkedList();
+   bagLinkedList = new LinkedList();
 
    for (int i = 0; i < 100; i++) {
-      Tile* tileData;
+      TileType tileData;
       if (i < 20) {
-         tileData = new Tile(RED);
+         tileData = TileType::RED;
       }
       else if (i < 40) {
-         tileData = new Tile(DARK_BLUE);
+         tileData = TileType::DARK_BLUE;
       }
       else if (i < 60) {
-         tileData = new Tile(LIGHT_BLUE);
+         tileData = TileType::LIGHT_BLUE;
       }
       else if (i < 80) {
-         tileData = new Tile(BLACK);
+         tileData = TileType::BLACK;
       }
       else {
-         tileData = new Tile(YELLOW);
+         tileData = TileType::YELLOW;
       }
-      tiles.addBack(tileData);
+      tempLinkedList->addBack(tileData);
    }
-
-   //shuffle bag
-
 }
 
 
@@ -35,38 +32,57 @@ Bag::~Bag() {
 }
 
 void Bag::clear() {
-    delete tempLinkedList;
-    delete bagLinkedList;
+   delete tempLinkedList;
+   delete bagLinkedList;
 }
 
 //how many tiles left?
 int Bag::size() {
-   return tiles.getSize();
+   return bagLinkedList->getSize();
 }
 
 
 
 //merhawi's shuffle function
-void shuffle() {
+void Bag::shuffle() {
    int min = 0;
-    int max = tempLinkedList->getSize();
-    int index = -1;
-    std::random_device engine;
+   int max = tempLinkedList->getSize();
+   int index = -1;
+   std::random_device engine;
 
-    for(int i = 0; i < max; ++i) {
-        int size = tempLinkedList->getSize() - 1;
-        std::uniform_int_distribution<int> uniform_dist(min, size);
-        index = uniform_dist(engine);
-        tempLinkedList->transferTo(index,bagLinkedList);
-    }
+   for (int i = 0; i < max; ++i) {
+      int size = tempLinkedList->getSize() - 1;
+      std::uniform_int_distribution<int> uniform_dist(min, size);
+      index = uniform_dist(engine);
+      tempLinkedList->transferTo(index, bagLinkedList);
+   }
+}
 
+void Bag::fill() {
+   for (int i = 0; i < 100; i++) {
+      TileType tileData = TileType::NO_TILE;
+      if (i < 20) {
+         tileData = TileType::RED;
+      }
+      else if (i < 40) {
+         tileData = TileType::DARK_BLUE;
+      }
+      else if (i < 60) {
+         tileData = TileType::LIGHT_BLUE;
+      }
+      else if (i < 80) {
+         tileData = TileType::BLACK;
+      }
+      else {
+         tileData = TileType::YELLOW;
+      }
+      tempLinkedList->addBack(tileData);
+   }
 }
 
 //get the backmost tile, or the front
 Tile Bag::getTopTile() {
-   Tile returnTile = *tiles.getTile(0);
-   std::cout << returnTile.tileToString() << std::endl;
-   tiles.deleteBack();
+   Tile returnTile = Tile(bagLinkedList->transferBack());
    return returnTile;
 }
 

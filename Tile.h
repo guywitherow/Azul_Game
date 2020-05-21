@@ -8,6 +8,7 @@
 class Tile {
    public:
    //Tile constructor 
+   Tile();
    Tile(TileType type);
 
    //Deconstructor
@@ -18,6 +19,7 @@ class Tile {
 
    //Returns a toString of the Tile
    std::string tileToString();
+   char tileToChar();
 
    TileType getType();
 

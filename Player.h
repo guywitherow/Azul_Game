@@ -16,11 +16,11 @@ class Player {
    int getScore();
 
    void setScore(int score);
-   void setWall(PlayerWall wall);
+   void setWall(PlayerWall* wall);
 
    private:
 
-   PlayerWall wall;
+   PlayerWall* wall;
    std::string playerName;
    int score;
 

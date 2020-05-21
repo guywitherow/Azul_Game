@@ -6,7 +6,7 @@ clean:
 	rm -f azul *.o
 
 azul: Bag.cpp Factory.cpp Player.cpp PlayerWall.cpp Tile.cpp LinkedList.cpp TileNode.cpp main.cpp
-	g++ -Wall -Werror -std=c++14 -g -O -o $@ $^
+	g++ -Wall -Werror -std=c++14 -g -O3 -o $@ $^
 
 %.o: %.cpp
-	g++ -Wall -Werror -std=c++14 -g -O -c $^
+	g++ -Wall -Werror -std=c++14 -g -O3 -c $^
