@@ -8,7 +8,7 @@
 
 class PlayerWall {
 
-  public:
+public:
    PlayerWall();
    ~PlayerWall();
 
@@ -25,7 +25,7 @@ class PlayerWall {
    void clearWall();
    void clearFloor();
 
-  private:
+private:
    std::vector<Tile> storage[5];
    Tile wall[WALL_DIM][WALL_DIM];
    Tile floor[FLOOR_DIM];

@@ -1,7 +1,11 @@
 #include "Tile.h"
 
 Tile::Tile() {
+<<<<<<< Updated upstream
     this->type = TileType::NO_TILE;
+=======
+   this->type = TileType::NO_TILE;
+>>>>>>> Stashed changes
 }
 
 Tile::Tile(TileType type){

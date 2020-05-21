@@ -10,6 +10,8 @@ class Bag {
       Bag(int seed);
       ~Bag();
 
+      void clear();
+
       int size();
       void fill();
       void shuffle();
@@ -17,7 +19,6 @@ class Bag {
       LinkedList getAllTiles();
 
    private:
-      LinkedList tiles;
 
       // This Generates a temporary linkedlist that contains all the tiles in order 
       LinkedList* tempLinkedList;

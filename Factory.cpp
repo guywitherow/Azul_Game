@@ -11,10 +11,8 @@ Factory::~Factory() {
 }
 
 void Factory::printFactory() {
-   if (tileCount > 0) {
-      for (auto i = tiles.begin(); i != tiles.end(); i++) {
-         std::cout << i->tileToChar() << " ";
-      }
+   for (auto i = tiles.begin(); i != tiles.end(); i++) {
+      std::cout << i->tileToChar();
    }
 }
    

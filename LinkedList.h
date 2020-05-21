@@ -27,8 +27,8 @@ class LinkedList
    std::string getTileToString(int index);
 
    //Adding a tile on either front or back of linked list
-   void addFront(Tile* tileInfo);
-   void addBack(Tile* tileinfo);
+   void addFront(TileType tileInfo);
+   void addBack(TileType tileinfo);
 
    //Deleting/Removing a tile from a linked list
    void deleteAt(int index);
@@ -37,8 +37,8 @@ class LinkedList
 
    //Transferring a tile from one linked list to another
    void transferTo(int index, LinkedList* list);
-   Tile* transferFront();
-   Tile* transferBack();
+   TileType transferFront();
+   TileType transferBack();
 
    private:
    TileNode* head;
