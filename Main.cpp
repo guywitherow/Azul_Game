@@ -7,6 +7,7 @@
 #include "Factory.h"
 #include "Types.h"
 #include "Bag.h"
+#include <vld.h>
 
 
 
@@ -16,6 +17,7 @@ void printReferenceBoard();
 void loadGame();
 void saveGame(std::string saveName);
 void game(int seed);
+void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* player);
 void loadData(std::string, std::string, int);
 void loadPlayer(std::string, int, int);
 void printFactories(Factory* factories[NUM_FACTORIES], Factory* table);
@@ -105,7 +107,7 @@ void game(int seed) {
     while (tileLoop) {
         printFactories(factories, table);
         printPlayerWall(player1);
-
+        takePlayerTurn(factories, table, player1);
        //selection
        //player 2 loops
 
@@ -129,6 +131,16 @@ void game(int seed) {
    delete table;
    for (int i = 0; i < 5; i++) {
       delete factories[i];
+   }
+}
+
+
+void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* player) {
+   std::string turn = takeUserInput();
+   if (turn == "help" || turn == "h") {
+      std::cout << "This is where you take your turn. Use the command 'turn', ";
+      std::cout << "along with your selections to take your turn!" << std::endl;
+      std::cout << "eg: '> turn " << std::endl;
    }
 }
 
