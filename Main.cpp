@@ -476,7 +476,7 @@ void saveGame(std::string saveName, Factory* (*factories)[NUM_FACTORIES],
    Factory* table, Bag* bag, Player* player1, Player* player2) {
 
    std::ofstream savefile;
-   savefile.open(saveName + ".txt");
+   savefile.open("tests/" + saveName + ".txt");
    int currentLine = 0;
    int dataIndex = 0;
    while (currentLine <= 35) {
