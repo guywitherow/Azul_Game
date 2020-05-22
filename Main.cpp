@@ -75,7 +75,7 @@ int main(int argc, char const *argv[])
 
 void game(int seed, bool load) {
    std::cout << "Starting a new game" << std::endl;
-   int turn = -1;
+   int turn = 0;
    //bag init
    Bag* bag = new Bag(seed);
 
@@ -92,7 +92,7 @@ void game(int seed, bool load) {
       turn = loadGame(&factories,table,bag,player1,player2);
       if (turn == -1) {
          load = false;
-         std::cout << "Load Failed. Starting a fresh game." << std::endl;
+         std::cout << "Load Failed. Starting a fresh game." << std::endl << std::endl;
       }
       else {
          std::cout << "Loaded" << std::endl << std::endl;
@@ -102,11 +102,11 @@ void game(int seed, bool load) {
       bag->fill();
       bag->shuffle();
 
-      std::cout << "Enter a name for player 1" << std::endl << std::endl;
+      std::cout << std::endl << "Enter a name for player 1" << std::endl ;
       std::string name = takeUserInput().at(0);
       player1 = new Player(name);
 
-      std::cout << "Enter a name for player 2" << std::endl << std::endl;
+      std::cout << std::endl << "Enter a name for player 2" << std::endl ;
       name = takeUserInput().at(0);
       player2 = new Player(name);
 
@@ -119,7 +119,7 @@ void game(int seed, bool load) {
    bool roundLoop = true;
    while (roundLoop) {
       //ensure clear factories, then fill
-      if (round != 0 && load != true) {
+      if (round != 0 || load != true) {
          for (int i = 0; i < NUM_FACTORIES; i++) {
             factories[i]->clearFactory();
             for (int j = 0; j < TILES_PER_FAC; j++) {
@@ -130,20 +130,19 @@ void game(int seed, bool load) {
          table->clearFactory();
          table->addTile(Tile(TileType::FIRST_PLAYER));
       }
-      
-
 
       bool tileLoop = true;
+      turn = 0;
       while (tileLoop) {
-         //players take their turns
-         if (turn == 2) {
-            takePlayerTurn(&factories, table, player2);
-            turn = -1;
+         Player* currentPlayer = player1;
+         if (turn % 2 == 0) {
+            currentPlayer = player2;
          }
-         takePlayerTurn(&factories, table, player1);
-         takePlayerTurn(&factories, table, player2);
-         //loop until we have no tiles on table
-         //factories check
+         takePlayerTurn(&factories, table, currentPlayer);
+         
+         std::cout << "Here is your board after that move." << std::endl;
+
+         printPlayerWall(currentPlayer);
 
          //check if any tiles are left
          int factoryTileCount = 0;
@@ -163,16 +162,26 @@ void game(int seed, bool load) {
          else {
             tileLoop = false;
          }
+         turn++;
       }
 
       //SCORE HERE
 
+      int player1Win = player1->getWall()->moveStorageToWall();
+      int player2Win = player2->getWall()->moveStorageToWall();
+
+      printPlayerWall(player1);
+      printPlayerWall(player2);
+      //move tiles for both players to the board
+      //check if either player has a full board line
+      //if they do, end, and compare scores
+      //otherwise, go again
 
       //stop looping the rounds when a player wins
-      roundLoop = false;
+      
       round++;
    }
-   std::cout << "Game Over." << std::endl;
+   std::cout << "Game Over." << std::endl << std::endl;
    delete bag;
    delete player1;
    delete player2;
@@ -194,12 +203,11 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
             std::cout << "This is where you take your turn. Use the command 'turn', ";
             std::cout << "along with your selections to take your turn!" << std::endl;
             std::cout << "eg: '> turn 3 L 3' moves all light blue tiles, from ";
-            std::cout << "factory 3, and puts them in storage line 3" << std::endl;
+            std::cout << "factory 3, and puts them in storage line 3" << std::endl << std::endl;
          }
          else if (command == "turn") {
             if (turn.size() != 4) {
-               std::cout << "Please use the command format, 'turn <factory> <color_code> <buffer>" << std::endl;
-               std::cout << turn.at(1) << std::endl;
+               std::cout << "Please use the command format, 'turn <factory> <color_code> <buffer>" << std::endl << std::endl;
             }
             else {
                //check turn input is valid
@@ -212,7 +220,7 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
                }
                //catch oob or invalid
                catch (...) {
-                  std::cout << "Please input a valid factory ID, between 0 and 5." << std::endl;
+                  std::cout << "Please input a valid factory ID, between 0 and 5." << std::endl << std::endl;
                }
                //bufferline in interp
                try {
@@ -220,7 +228,7 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
                }
                //same as above
                catch (...) {
-                  std::cout << "Please input a valid buffer ID, between 1 and 5." << std::endl;
+                  std::cout << "Please input a valid buffer ID, between 1 and 5." << std::endl << std::endl;
                }
 
                //change tile string to TileType
@@ -231,6 +239,10 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
                //errorCheck += checkValidFactory(factory);
                //errorCheck += checkValidTile(tileChar);
                //errorCheck += checkValidBuffer(bufferLine);
+
+               if (player->getWall()->checkWallLineForType(bufferLine, userTileType) == true) {
+                  errorCheck += '\n' + "Error. This line already has a tile of that type.";
+               }
 
                if (errorCheck == "") {
                   int tiles = -1;
@@ -274,6 +286,7 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
                }
                else {
                   //some blah about valid tile types, as well as buffers and factories
+                  std::cout << errorCheck << std::endl;
                }
             }
          }
@@ -285,7 +298,7 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
          }
       }
       else {
-         std::cout << "Please input a command." << std::endl;
+         std::cout << "Please input a command." << std::endl << std::endl;
       }
    }
    
@@ -313,7 +326,7 @@ void printPlayerWall(Player* player) {
    std::string playerName = player->getName();
    std::string wallString = player->getWall()->getPlayerWallString();
 
-   std::cout << "Mosaic for " << playerName << ":" << std::endl;
+   std::cout << "Mosaic for " << playerName << ":" << std::endl << std::endl;
    std::cout << wallString << std::endl;
    std::cout << std::endl;
 }
@@ -356,9 +369,9 @@ void printReferenceBoard() {
       std::cout << std::endl;
    }
 
-   std::cout << std::endl;
+   std::cout << std::endl << std::endl;
 
-   std::cout << "Please make moves using the format 'turn <factory number> <tile color letter> <storage row>" << std::endl;
+   std::cout << "Please make moves using the format 'turn <factory number> <tile color letter> <storage row>" << std::endl << std::endl;
 }
 
 std::vector<std::string> takeUserInput() {

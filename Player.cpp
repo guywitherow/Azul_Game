@@ -14,25 +14,12 @@ Player::~Player()
 
 void Player::load(std::string data, int dataID) {
 
-   //Player player = getPlayer(playerID);
-   //data loaded in order
-   //name
-   //id?????
-   //buffer 1
-   //buffer 2
-   //buffer ...
-   //wall 1
-   //wall 2
-   //wall ...
-   //floor
-   //score
-
    if (dataID == 0) {
       setName(data);
    }
    else if (dataID >= 1 && dataID <= 5) {
       std::vector<Tile> tilesToAdd;
-      for (unsigned i = 0; i < data.length(); ++i)
+      for (unsigned i = 0; i < dataID; ++i)
       {
          tilesToAdd.push_back(Tile::charToTile(data.at(i)));
       }

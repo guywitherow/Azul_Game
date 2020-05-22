@@ -63,5 +63,12 @@ std::vector<Tile> Factory::getTiles() {
 }
 
 int Factory::getTileCount() {
+   tileCount = 0;
+   for (int i = 0; i < tiles.size(); i++) {
+      if (tiles[i].getType() != TileType::NO_TILE) {
+         tileCount++;
+      }
+   }
+
    return tileCount;
 }

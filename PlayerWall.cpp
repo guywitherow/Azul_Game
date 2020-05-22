@@ -34,8 +34,8 @@ std::vector<Tile> PlayerWall::getStorageLine(int line) {
 }
 
 void PlayerWall::setBufferLine(std::vector<Tile> added, int line) {
-   for (int i = 0; i < line; i++) {
-      storage[line - 1][i] = added.at(i);
+   for (int i = 0; i < line + 1; i++) {
+      storage[line][i] = added.at(i);
    }
 }
 
@@ -43,6 +43,16 @@ void PlayerWall::setWallLine(std::vector<Tile> added, int line) {
    for (int i = 0; i < WALL_DIM; i++) {
       wall[line][i] = added.at(i);
    }
+}
+
+bool PlayerWall::checkWallLineForType(int line, TileType type) {
+   bool found = false;
+   for (int i = 0; i < WALL_DIM; i++) {
+      if (wall[line][i].getType() == type){
+         found = true;
+      }
+   }
+   return found;
 }
 
 //get a line of the wall by direction
@@ -168,22 +178,89 @@ void PlayerWall::addToFloorLine(TileType type, int count) {
 //adjacent tiles
 //if a complete horizontal line is reached, we need to flag game over
 //(BASICLY A SCORE FUNCTION)
-void PlayerWall::moveStorageToWall() {
-   std::cout << "OOYOYOOYOYOY" << std::endl;
+int PlayerWall::moveStorageToWall() {
+   int score = 0;
+
+   for (int i = 0; i < WALL_DIM; i++) {
+      std::vector<Tile> currentBuffer = storage[i];
+      int tilesInBuffer = 0;
+      for (int j = 0; j < i + 1; j++) {
+         if (currentBuffer.at(j).getType() != TileType::NO_TILE) {
+            tilesInBuffer++;
+         }
+      }
+
+      //full line in buffer?
+      //move them
+      if (tilesInBuffer > i) {
+         int scoreToAdd = 0;
+         TileType addToWall = currentBuffer.at(0).getType();
+         char tiles[WALL_DIM] = { 'B', 'Y', 'R', 'U', 'L' };
+
+         for (int j = 0; j < WALL_DIM; j++) {
+            int tileNumber = (j + i) % 5;
+            if (addToWall == Tile::charToTile(tiles[j])) {
+               wall[i][j] = Tile(addToWall);
+
+               scoreToAdd = checkScore(i, j);
+
+            }
+         }
+         std::cout << std::endl;
+         score += scoreToAdd;
+
+         storage[i].clear();
+         resetStorageLine(i);
+      }
+   }
+
+   return score;
 }
 
+void PlayerWall::resetStorageLine(int line) {
 
-//clears storage
-void PlayerWall::clearStorage() {
-
-}
-
-//clears wall
-void PlayerWall::clearWall() {
+   storage[line].resize(line + 1, Tile());
 
 }
 
-//clears floor
-void PlayerWall::clearFloor() {
+int PlayerWall::checkScore(int y, int x) {
+   std::vector<Tile> tileLine;
+   int loopNum = 0;
+   int score = 1;
 
+   while (loopNum < 2) {
+      if (loopNum == 0) {
+         for (int i = 0; i < WALL_DIM; i++) {
+            tileLine.push_back(wall[y][i]);
+         }
+      }
+      else {
+         for (int i = 0; i < WALL_DIM; i++) {
+            tileLine.push_back(wall[i][x]);
+         }
+      }
+
+      int streak = 0;
+      bool seenTarget = false;
+      for (int i = 0; i < WALL_DIM; i++) {
+         if (tileLine.at(i).getType() != TileType::NO_TILE) {
+            streak++;
+            if (tileLine.at(i).getType() == wall[y][x].getType()) {
+               seenTarget = true;
+            }
+         }
+         else {
+            if (seenTarget) {
+               i = WALL_DIM;
+            }
+            else {
+               streak = 0;
+            }
+         }
+      }
+      score += streak;
+      loopNum++;
+   }
+   
+   return score;
 }

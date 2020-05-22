@@ -16,6 +16,12 @@ public:
    Tile* getWallLine(int line, Direction direction);
    Tile* getFloorLine();
 
+   int checkScore(int i, int j);
+
+   void resetStorageLine(int line);
+
+   bool checkWallLineForType(int line, TileType type);
+
    std::string getPlayerWallString();
    void addToStorageLine(TileType type, int count, int line);
    void addToFloorLine(TileType type, int count);
@@ -23,11 +29,7 @@ public:
    void setBufferLine(std::vector<Tile>, int line);
    void setWallLine(std::vector<Tile>, int line);
 
-   void moveStorageToWall();
-
-   void clearStorage();
-   void clearWall();
-   void clearFloor();
+   int moveStorageToWall();
 
 private:
    std::vector<Tile> storage[5];
