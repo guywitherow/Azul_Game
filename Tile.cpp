@@ -79,7 +79,7 @@ TileType Tile::getType() {
 TileType Tile::stringToType(std::string givenType) {
    //THIS ONLY NEEDS TO INTERP USER INPUT, NO FIRST TILE OR
    //NO_TILE NEEDED
-   TileType typeTile = TileType::RED;
+   TileType typeTile = TileType::NO_TILE;
    if (givenType.compare("R") == 0) {
       typeTile = TileType::RED;
    }

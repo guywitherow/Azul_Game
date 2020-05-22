@@ -7,7 +7,7 @@ Factory::Factory() {
 }
 
 Factory::~Factory() {
-   tiles.clear();
+   clearFactory();
 }
 
 void Factory::printFactory() {
@@ -25,7 +25,6 @@ int Factory::removeTile(TileType type) {
       if (i->getType() == type) {
          toDelete[removedTileCount] = currentTile;
          removedTileCount++;
-         tileCount--;
       }
       currentTile++;
    }
@@ -35,8 +34,8 @@ int Factory::removeTile(TileType type) {
       tiles.erase(tiles.begin() + index);
    }
 
-   for (int i = 0; i < removedTileCount; i++) {
-      tiles.push_back(Tile());
+   if (removedTileCount > 0) {
+      tileCount = 0;
    }
 
    return removedTileCount;
@@ -49,6 +48,7 @@ void Factory::addTile(Tile tile) {
 
 void Factory::clearFactory() {
    //remove all from the vector
+   tiles.clear();
 }
 
 std::vector<Tile> Factory::getTiles() {

@@ -111,12 +111,12 @@ std::string PlayerWall::getPlayerWallString() {
 //add tiles to storage line, any excess go to the floor
 void PlayerWall::addToStorageLine(TileType type, int count, int line) {
    int currentTilesOnBuffer = 0;
-   for (int j = 0; j < line; j++) {
+   for (int j = 0; j < line + 1; j++) {
       if (storage[line].at(j).getType() != TileType::NO_TILE) {
          currentTilesOnBuffer++;
       }
    }
-   
+
    for (int i = 0; i < count; i++) {
       if (currentTilesOnBuffer > line) {
          addToFloorLine(type, 1);

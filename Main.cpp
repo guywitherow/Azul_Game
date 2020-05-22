@@ -105,7 +105,7 @@ void game(int seed) {
       //ensure clear factories, then fill
       for (int i = 0; i < NUM_FACTORIES; i++) {
          factories[i]->clearFactory();
-         for (int j = 0; j < 4; j++) {
+         for (int j = 0; j < TILES_PER_FAC; j++) {
             factories[i]->addTile(bag->getTopTile());
          }
       }
@@ -121,8 +121,8 @@ void game(int seed) {
          takePlayerTurn(&factories, table, player1);
          //selection
          //player 2 loops
-         printFactories(&factories, table);
-         printPlayerWall(player2);
+         //printFactories(&factories, table);
+         //printPlayerWall(player2);
          //loop until we have no tiles on table
          //factories check
 
@@ -186,7 +186,7 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
 
                //factory int interp
                try {
-                  factory = std::stoi(turn.at(1));
+                  factory = std::stoi(turn.at(1)) -1;
                }
                //catch oob or invalid
                catch (...) {
@@ -194,7 +194,7 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
                }
                //bufferline in interp
                try {
-                  bufferLine = std::stoi(turn.at(3));
+                  bufferLine = std::stoi(turn.at(3)) -1;
                }
                //same as above
                catch (...) {
@@ -212,24 +212,42 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
 
                if (errorCheck == "") {
                   int tiles = -1;
-                  if (factory == 0) {
+                  if (factory == -1) {
                      tiles = table->removeTile(userTileType);
                      if (table->removeTile(TileType::FIRST_PLAYER) != 0) {
                         player->getWall()->addToFloorLine(TileType::FIRST_PLAYER, 1);
                      }
                   }
                   else {
-                     tiles = (*factories)[factory - 1]->removeTile(userTileType);
+                     tiles = (*factories)[factory]->removeTile(userTileType);
                   }
 
                   if (tiles > 0) {
                      valid = true;
                      player->getWall()->addToStorageLine(userTileType, tiles, bufferLine);
-                     std::vector<Tile> moveToTable = (*factories)[factory]->getTiles();
-                     (*factories)[factory]->clearFactory();
+                     std::vector<Tile> moveToTable;
+                     if (factory == -1) {
+                        moveToTable = table->getTiles();
+                     }
+                     else {
+                        moveToTable = (*factories)[factory]->getTiles();
+                        (*factories)[factory]->clearFactory();
+                        for (int i = 0; i < TILES_PER_FAC; i++) {
+                           (*factories)[factory]->addTile(Tile());
+                        }
+                     }
+                     
+                     if (moveToTable.size() > 0) {
+                        for (auto i = moveToTable.begin(); i != moveToTable.end(); i++) {
+                           if (i->getType() != TileType::NO_TILE) {
+                              table->addTile(Tile(i->getType()));
+                           }
+                        }
+                     }
+                     
                   }
                   else {
-                     std::cout << "Factory number " + std::to_string(factory) + " has no tiles of type ";
+                     std::cout << "Factory number " + std::to_string(factory + 1) + " has no tiles of type ";
                      std::cout << Tile::tileToString(userTileType) << ". Please make a valid selection.";
                      //the player has chosen to take a type of tile that is not in that factory
                   }

@@ -4,6 +4,7 @@
 #define NUM_FACTORIES 5
 #define WALL_DIM 5
 #define FLOOR_DIM 7
+#define TILES_PER_FAC 4
 
 enum class TileType {
    RED = 'R',
