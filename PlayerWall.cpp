@@ -195,13 +195,18 @@ int PlayerWall::moveStorageToWall() {
       if (tilesInBuffer > i) {
          int scoreToAdd = 0;
          TileType addToWall = currentBuffer.at(0).getType();
-         char tiles[WALL_DIM] = { 'B', 'Y', 'R', 'U', 'L' };
+         char tiles[WALL_DIM] = {'B','L', 'U','R','Y' };
 
          for (int j = 0; j < WALL_DIM; j++) {
-            int tileNumber = (j + i) % 5;
-            if (addToWall == Tile::charToTile(tiles[j])) {
+            int absoluteTileNumber = i - j;
+            if (absoluteTileNumber < 0) {
+               absoluteTileNumber = 5 + absoluteTileNumber;
+            }
+            
+            std::cout << tiles[absoluteTileNumber] << " " << std::to_string(absoluteTileNumber) << std::endl;
+            if (addToWall == Tile::charToTile(tiles[absoluteTileNumber])) {
                wall[i][j] = Tile(addToWall);
-
+               std::cout << std::to_string(i) << "," << std::to_string(j) << wall[i][j].tileToString() << std::endl;
                scoreToAdd = checkScore(i, j);
 
             }
@@ -215,6 +220,23 @@ int PlayerWall::moveStorageToWall() {
    }
 
    return score;
+}
+
+bool PlayerWall::checkIfDone() {
+   bool done = false;
+   for (int i = 0; i < WALL_DIM; i++) {
+      for (int j = 0; j < WALL_DIM; j++) {
+         done = true;
+         if (wall[i][j].getType() == TileType::NO_TILE) {
+            j = 5;
+            done = false;
+         }
+      }
+      if (done == true) {
+         i = WALL_DIM;
+      }
+   }
+   return done;
 }
 
 void PlayerWall::resetStorageLine(int line) {
@@ -263,4 +285,54 @@ int PlayerWall::checkScore(int y, int x) {
    }
    
    return score;
+}
+
+int PlayerWall::endOfGameScore() {
+   int finalScoreAdd = 0;
+
+   //check horz
+
+   for (int i = 0; i < WALL_DIM; i++) {
+      bool lineCheck = true;
+      for (int j = 0; j < WALL_DIM; j++) {
+         if (wall[i][j].getType() == TileType::NO_TILE) {
+            lineCheck = false;
+         }
+      }
+      if (lineCheck) {
+         finalScoreAdd += SCORE_BONUS_HORZ;
+      }
+   }
+
+   //check vert
+
+   for (int i = 0; i < WALL_DIM; i++) {
+      bool lineCheck = true;
+      for (int j = 0; j < WALL_DIM; j++) {
+         if (wall[j][i].getType() == TileType::NO_TILE) {
+            lineCheck = false;
+         }
+      }
+      if (lineCheck) {
+         finalScoreAdd += SCORE_BONUS_VERT;
+      }
+   }
+
+   int starterX = 0;
+   for (int i = 0; i < WALL_DIM; i++) {
+      bool colorCheck = true;
+      for (int j = 0; j < WALL_DIM; j++) {
+         int x = (j + starterX) % 5;
+         if (wall[j][x].getType() == TileType::NO_TILE) {
+            colorCheck = false;
+         }
+      }
+      if (colorCheck) {
+         finalScoreAdd += SCORE_BONUS_COLOR;
+      }
+      starterX++;
+   }
+   //check color
+
+   return finalScoreAdd;
 }

@@ -17,10 +17,12 @@ public:
    Tile* getFloorLine();
 
    int checkScore(int i, int j);
+   int endOfGameScore();
 
    void resetStorageLine(int line);
 
    bool checkWallLineForType(int line, TileType type);
+   bool checkIfDone();
 
    std::string getPlayerWallString();
    void addToStorageLine(TileType type, int count, int line);

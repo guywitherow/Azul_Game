@@ -19,7 +19,7 @@ void Player::load(std::string data, int dataID) {
    }
    else if (dataID >= 1 && dataID <= 5) {
       std::vector<Tile> tilesToAdd;
-      for (unsigned i = 0; i < dataID; ++i)
+      for (int i = 0; i < dataID; ++i)
       {
          tilesToAdd.push_back(Tile::charToTile(data.at(i)));
       }

@@ -6,6 +6,11 @@
 #define FLOOR_DIM 7
 #define TILES_PER_FAC 4
 
+
+#define SCORE_BONUS_VERT 7
+#define SCORE_BONUS_HORZ 5
+#define SCORE_BONUS_COLOR 10
+
 enum class TileType {
    RED = 'R',
    YELLOW = 'Y',

@@ -170,10 +170,28 @@ void game(int seed, bool load) {
       int player1Win = player1->getWall()->moveStorageToWall();
       int player2Win = player2->getWall()->moveStorageToWall();
 
+      player1->setScore(player1->getScore() + player1Win);
+      player2->setScore(player2->getScore() + player2Win);
+
       printPlayerWall(player1);
+      std::cout << "Player 1 Score: " << player1->getScore() << std::endl << std::endl;
       printPlayerWall(player2);
+      std::cout << "Player 2 Score: " << player2->getScore() << std::endl << std::endl;
       //move tiles for both players to the board
       //check if either player has a full board line
+      bool playersDone = player1->getWall()->checkIfDone();
+      if (playersDone == false) {
+         playersDone = player2->getWall()->checkIfDone();
+      }
+
+      if (playersDone == true) {
+         roundLoop = false;
+         std::cout << "game over, a player has 5 in a row." << std::endl;
+      }
+      else {
+         std::cout << "next round starting" << std::endl;
+      }
+
       //if they do, end, and compare scores
       //otherwise, go again
 
@@ -181,7 +199,19 @@ void game(int seed, bool load) {
       
       round++;
    }
-   std::cout << "Game Over." << std::endl << std::endl;
+
+   int player1Final = player1->getWall()->endOfGameScore();
+   int player2Final = player2->getWall()->endOfGameScore();
+
+   player1->setScore(player1->getScore() + player1Final);
+   player2->setScore(player2->getScore() + player2Final);
+
+   std::cout << "Final Scores:" << std::endl;
+
+   std::cout << "Player 1: " << std::to_string(player1->getScore()) << std::endl;
+   std::cout << "Player 2: " << std::to_string(player2->getScore()) << std::endl;
+
+   std::cout << std::endl << std::endl << "Game Over." << std::endl << std::endl;
    delete bag;
    delete player1;
    delete player2;
