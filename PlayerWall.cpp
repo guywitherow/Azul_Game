@@ -33,6 +33,14 @@ std::vector<Tile> PlayerWall::getStorageLine(int line) {
    return storage[line];
 }
 
+void PlayerWall::setBufferLine(std::vector<Tile>, int line) {
+
+}
+
+void PlayerWall::setWallLine(std::vector<Tile>, int line) {
+
+}
+
 //get a line of the wall by direction
 Tile* PlayerWall::getWallLine(int line, Direction direction) {
 

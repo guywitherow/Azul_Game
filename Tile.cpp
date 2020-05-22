@@ -70,6 +70,32 @@ char Tile::tileToChar() {
    return typeChar;
 }
 
+TileType Tile::charToTile(char givenChar) {
+   TileType typeReturn;
+   if (givenChar == 'R') {
+      typeReturn = TileType::RED;
+   }
+   else if (givenChar == 'Y') {
+      typeReturn = TileType::YELLOW;
+   }
+   else if (givenChar == 'L') {
+      typeReturn = TileType::LIGHT_BLUE;
+   }
+   else if (givenChar == 'B') {
+      typeReturn = TileType::DARK_BLUE;
+   }
+   else if (givenChar == 'U') {
+      typeReturn = TileType::BLACK;
+   }
+   else if (givenChar == '.') {
+      typeReturn = TileType::NO_TILE;
+   }
+   else if (givenChar == 'F') {
+      typeReturn = TileType::FIRST_PLAYER;
+   }
+   return typeReturn;
+}
+
 //gets the type of the current tile
 TileType Tile::getType() {
    return type;

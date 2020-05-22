@@ -17,6 +17,8 @@ class Factory {
    void printFactory();
    int getTileCount();
 
+   void load(std::string data);
+
    private:
    std::vector<Tile> tiles;
    int tileCount = 0;

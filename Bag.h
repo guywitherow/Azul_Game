@@ -16,16 +16,17 @@ public:
    int size();
    void fill();
    void shuffle();
+   void load(std::string data);
    Tile getTopTile();
    LinkedList getAllTiles();
 
-   private:
+private:
 
-      // This Generates a temporary linkedlist that contains all the tiles in order 
-      LinkedList* tempLinkedList;
+   // This Generates a temporary linkedlist that contains all the tiles in order 
+   LinkedList* tempLinkedList;
 
-      // Randomizes the Tiles in the temporary linkedlist and stores them in this linkedlist.
-      // This linkedlist will be the main linkedlist where players take tiles from.
-      LinkedList* bagLinkedList;
+   // Randomizes the Tiles in the temporary linkedlist and stores them in this linkedlist.
+   // This linkedlist will be the main linkedlist where players take tiles from.
+   LinkedList* bagLinkedList;
 };
 #endif

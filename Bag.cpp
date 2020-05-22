@@ -4,28 +4,7 @@
 Bag::Bag(int seed) {
    tempLinkedList = new LinkedList();
    bagLinkedList = new LinkedList();
-
-   for (int i = 0; i < 100; i++) {
-      TileType tileData;
-      if (i < 20) {
-         tileData = TileType::RED;
-      }
-      else if (i < 40) {
-         tileData = TileType::DARK_BLUE;
-      }
-      else if (i < 60) {
-         tileData = TileType::LIGHT_BLUE;
-      }
-      else if (i < 80) {
-         tileData = TileType::BLACK;
-      }
-      else {
-         tileData = TileType::YELLOW;
-      }
-      tempLinkedList->addBack(tileData);
-   }
 }
-
 
 Bag::~Bag() {
    clear();
@@ -41,7 +20,12 @@ int Bag::size() {
    return bagLinkedList->getSize();
 }
 
-
+void Bag::load(std::string data) {
+   for (unsigned i = 0; i < data.length(); ++i)
+   {
+      bagLinkedList->addBack(Tile::charToTile(data.at(i)));
+   }
+}
 
 //merhawi's shuffle function
 void Bag::shuffle() {
@@ -60,7 +44,7 @@ void Bag::shuffle() {
 
 void Bag::fill() {
    for (int i = 0; i < 100; i++) {
-      TileType tileData = TileType::NO_TILE;
+      TileType tileData;
       if (i < 20) {
          tileData = TileType::RED;
       }

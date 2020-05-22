@@ -20,6 +20,9 @@ public:
    void addToStorageLine(TileType type, int count, int line);
    void addToFloorLine(TileType type, int count);
 
+   void setBufferLine(std::vector<Tile>, int line);
+   void setWallLine(std::vector<Tile>, int line);
+
    void moveStorageToWall();
 
    void clearStorage();

@@ -17,6 +17,13 @@ void Factory::printFactory() {
    }
 }
    
+void Factory::load(std::string data) {
+   for (unsigned i = 0; i < data.length(); ++i)
+   {
+      addTile(Tile::charToTile(data.at(i)));
+   }
+}
+
 int Factory::removeTile(TileType type) {
    int removedTileCount = 0;
    std::vector<int> toDelete;

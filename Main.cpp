@@ -10,17 +10,15 @@
 #include "Types.h"
 #include "Tile.h"
 #include "Bag.h"
-#include <vld.h>
 
 void printMenu();
 void printCredits();
 void printReferenceBoard();
-void loadGame();
+void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2);
 void saveGame(std::string saveName);
-void game(int seed);
+void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2);
+void game(int seed, bool load);
 void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player);
-void loadData(std::string, std::string, int);
-void loadPlayer(std::string, int, int);
 void printFactories(Factory* (*factories)[NUM_FACTORIES], Factory* table);
 void printPlayerWall(Player* player);
 std::vector<std::string> takeUserInput();
@@ -49,12 +47,12 @@ int main(int argc, char const *argv[])
          }
 
          seed = rand();
-         game(seed);
+         game(seed, false);
          
       } 
       else if (input == "2") {
          //load game
-         loadGame();
+         game(0, true);
       } 
       else if (input == "3") {
          //credits
@@ -76,12 +74,12 @@ int main(int argc, char const *argv[])
    return 0;
 }
 
-void game(int seed) {
+void game(int seed, bool load) {
    std::cout << "Starting a new game" << std::endl;
 
    //bag init
    Bag* bag = new Bag(seed);
-   bag->shuffle();
+
    Factory* table = new Factory();
 
    Factory* factories[NUM_FACTORIES];
@@ -89,46 +87,58 @@ void game(int seed) {
       factories[i] = new Factory();
    }
    //player names
+   Player* player1 = new Player("");
+   Player* player2 = new Player("");
+   if (load) {
+      loadGame(&factories,table,bag,player1,player2);
+      std::cout << "Loaded" << std::endl << std::endl;
+   }
+   else {
+      bag->fill();
+      bag->shuffle();
 
-   std::cout << "Enter a name for player 1" << std::endl << std::endl;
-   std::string name = takeUserInput().at(0);
-   Player* player1 = new Player(name);
+      std::cout << "Enter a name for player 1" << std::endl << std::endl;
+      std::string name = takeUserInput().at(0);
+      player1 = new Player(name);
 
-   std::cout << "Enter a name for player 2" << std::endl << std::endl;
-   name = takeUserInput().at(0);
-   Player* player2 = new Player(name);
+      std::cout << "Enter a name for player 2" << std::endl << std::endl;
+      name = takeUserInput().at(0);
+      player2 = new Player(name);
 
-   std::cout << "Let's Play!" << std::endl << std::endl;
+      std::cout << "Let's Play!" << std::endl << std::endl;
+   }
 
+
+   
+   int round = 0;
    bool roundLoop = true;
    while (roundLoop) {
       //ensure clear factories, then fill
-      for (int i = 0; i < NUM_FACTORIES; i++) {
-         factories[i]->clearFactory();
-         for (int j = 0; j < TILES_PER_FAC; j++) {
-            factories[i]->addTile(bag->getTopTile());
+      if (round != 0 && load != true) {
+         for (int i = 0; i < NUM_FACTORIES; i++) {
+            factories[i]->clearFactory();
+            for (int j = 0; j < TILES_PER_FAC; j++) {
+               factories[i]->addTile(bag->getTopTile());
+            }
          }
+         //ensure clean table, add first player tile
+         table->clearFactory();
+         table->addTile(Tile(TileType::FIRST_PLAYER));
       }
-      //ensure clean table, add first player tile
-      table->clearFactory();
-      table->addTile(Tile(TileType::FIRST_PLAYER));
+      
 
 
       bool tileLoop = true;
       while (tileLoop) {
-         printFactories(&factories, table);
-         printPlayerWall(player1);
+         //players take their turns
          takePlayerTurn(&factories, table, player1);
-         //selection
-         //player 2 loops
-         //printFactories(&factories, table);
-         //printPlayerWall(player2);
+         takePlayerTurn(&factories, table, player2);
          //loop until we have no tiles on table
          //factories check
 
+         //check if any tiles are left
          int factoryTileCount = 0;
          int tableTileCount = 0;
-
          tableTileCount = table->getTileCount();
          for (int i = 0; i < NUM_FACTORIES; i++) {
             //check all factories
@@ -137,7 +147,7 @@ void game(int seed) {
                i = 5;
             }
          }
-         //if any factory has tiles left, wait.
+         //if any factory has tiles left, let the players go again.
          if (tableTileCount > 0 || factoryTileCount > 0) {
             tileLoop = true;
          }
@@ -151,6 +161,7 @@ void game(int seed) {
 
       //stop looping the rounds when a player wins
       roundLoop = false;
+      round++;
    }
    std::cout << "Game Over." << std::endl;
    delete bag;
@@ -163,6 +174,8 @@ void game(int seed) {
 }
 
 void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player) {
+   printFactories(factories, table);
+   printPlayerWall(player);
    bool valid = false;
    while (!valid) {
       std::vector<std::string> turn = takeUserInput();
@@ -417,7 +430,7 @@ void saveGame(std::string saveName) {
 
 }
 
-void loadGame() {
+void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2) {
    //get user input for which file to load
    std::string input;
    std::cout << "Enter the name of the file which you want to load."
@@ -438,35 +451,32 @@ void loadGame() {
 
          //read in the data
          else {
-            std::string dataIdentifier;
             int dataIndex = 0;
 
             //identify what part of the file we are reading
             if (currentLine == 0) {
-               dataIdentifier = "bag";
-            }
-            else if (currentLine == 1) {
-               dataIdentifier = "lid";
+               bag->load(line);
             }
             else if (currentLine >= 2 && currentLine <= 6) {
-               dataIdentifier = "factory";
                dataIndex = currentLine - 2;
+               (*factories)[dataIndex]->load(line);
             }
             else if (currentLine == 7) {
-               dataIdentifier = "table";
+               table->load(line);
             }
             else if (currentLine >= 8 && currentLine <= 35) {
                //14 lines of data for a player, * 2
-               dataIdentifier = "player";
                dataIndex = currentLine - 8;
+               if (dataIndex / 14 == 0) {
+                  //player1->load(line, dataIndex % 14);
+               }
+               else {
+                  //player2->load(line, dataIndex % 14);
+               }
             }
             else if (currentLine == 36) {
-               dataIdentifier = "currentTurn";
+               //currentTurn = line;
             }
-
-            //send that to our neat loading function
-            loadData(lineCheck, dataIdentifier, dataIndex);
-
             currentLine++;
          }
       }
@@ -475,69 +485,4 @@ void loadGame() {
    }
    else std::cout << "Unable to open file";
 
-}
-
-void loadData(std::string line, std::string dataIdentifier, int dataIndex) {
-   if (dataIdentifier == "bag") {
-      //loadBag(line);
-   }
-   else if (dataIdentifier == "lid") {
-      //loadLid(line);
-   }
-   else if (dataIdentifier == "factory") {
-      //loadFactory(line,dataIndex);
-   }
-   else if (dataIdentifier == "table") {
-      //loadTable(line);
-   }
-   else if (dataIdentifier == "player") {
-      loadPlayer(line, dataIndex / 14, dataIndex % 14);
-   }
-   else if (dataIdentifier == "currentTurn") {
-      //setPlayerTurn(line);
-   }
-
-   if (dataIdentifier != "player") {
-      std::cout << line << std::endl;
-      std::cout << "is data for : " << dataIdentifier << std::endl;
-   }
-
-}
-
-void loadPlayer(std::string line, int playerID, int dataLine) {
-
-   //Player player = getPlayer(playerID);
-   //data loaded in order
-   //name
-   //id?????
-   //buffer 1
-   //buffer 2
-   //buffer ...
-   //wall 1
-   //wall 2
-   //wall ...
-   //floor
-   //score
-
-   if (dataLine == 0) {
-      //player.setName(line);
-   }
-   else if (dataLine == 1) {
-      //player.setID(line)????
-   }
-   else if (dataLine >= 2 && dataLine <= 6) {
-      //player.setBufferLine(line,dataLine-3);
-   }
-   else if (dataLine >= 7 && dataLine <= 11) {
-      //player.setWallLine(line,dataLine-8);
-   }
-   else if (dataLine == 12) {
-      //player.setFloor();
-   }
-   else if (dataLine == 13) {
-      //player.setScore();
-   }
-
-   std::cout << line << std::endl;
-   std::cout << "is player " << playerID << "'s data for " << dataLine << std::endl;
 }
