@@ -64,7 +64,8 @@ std::vector<Tile> Factory::getTiles() {
 
 int Factory::getTileCount() {
    tileCount = 0;
-   for (int i = 0; i < tiles.size(); i++) {
+   int tileSize = tiles.size();
+   for (int i = 0; i < tileSize; i++) {
       if (tiles[i].getType() != TileType::NO_TILE) {
          tileCount++;
       }
@@ -75,7 +76,8 @@ int Factory::getTileCount() {
 
 std::string Factory::getTilesString() {
    std::string returnString = "";
-   for (int i = 0; i < tiles.size(); i++) {
+   int tileSize = tiles.size();
+   for (int i = 0; i < tileSize; i++) {
       returnString += tiles.at(i).tileToChar();
    }
    return returnString;

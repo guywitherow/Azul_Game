@@ -37,7 +37,8 @@ void Player::load(std::string data, int dataID) {
    }
    else if (dataID == 11) {
       std::vector<Tile> tilesToAdd;
-      for (int i = 0; i < data.length(); i++) {
+      int dataLength = data.length();
+      for (int i = 0; i < dataLength; i++) {
          TileType current = Tile::charToTile(data.at(i));
          if (current == TileType::NO_TILE) {
             i = FLOOR_DIM;
