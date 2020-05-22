@@ -77,23 +77,22 @@ TileType Tile::getType() {
 
 //takes a string of a character and gives back a matching type
 TileType Tile::stringToType(std::string givenType) {
-
    //THIS ONLY NEEDS TO INTERP USER INPUT, NO FIRST TILE OR
    //NO_TILE NEEDED
-   TileType typeTile = TileType::NO_TILE;
-   if (givenType == "R") {
+   TileType typeTile = TileType::RED;
+   if (givenType.compare("R") == 0) {
       typeTile = TileType::RED;
    }
-   else if (givenType == "Y") {
+   else if (givenType.compare("Y") == 0) {
       typeTile = TileType::YELLOW;
    }
-   else if (givenType == "L") {
+   else if (givenType.compare("L") == 0) {
       typeTile = TileType::LIGHT_BLUE;
    }
-   else if (givenType == "B") {
+   else if (givenType.compare("B") == 0) {
       typeTile = TileType::DARK_BLUE;
    }
-   else if (givenType == "U") {
+   else if (givenType.compare("U") == 0) {
       typeTile = TileType::BLACK;
    }
 

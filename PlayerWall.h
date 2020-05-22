@@ -18,6 +18,7 @@ public:
 
    std::string getPlayerWallString();
    void addToStorageLine(TileType type, int count, int line);
+   void addToFloorLine(TileType type, int count);
 
    void moveStorageToWall();
 
@@ -29,6 +30,7 @@ private:
    std::vector<Tile> storage[5];
    Tile wall[WALL_DIM][WALL_DIM];
    Tile floor[FLOOR_DIM];
+   int tilesOnFloor = 0;
 
 };
 

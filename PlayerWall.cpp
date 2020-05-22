@@ -20,6 +20,8 @@ PlayerWall::PlayerWall() {
    for (int i = 0; i < FLOOR_DIM; i++) {
       floor[i] = Tile();
    }
+
+   tilesOnFloor = 0;
 }
 
 PlayerWall::~PlayerWall() {
@@ -108,31 +110,32 @@ std::string PlayerWall::getPlayerWallString() {
 
 //add tiles to storage line, any excess go to the floor
 void PlayerWall::addToStorageLine(TileType type, int count, int line) {
+   int currentTilesOnBuffer = 0;
+   for (int j = 0; j < line; j++) {
+      if (storage[line].at(j).getType() != TileType::NO_TILE) {
+         currentTilesOnBuffer++;
+      }
+   }
+   
    for (int i = 0; i < count; i++) {
-      if (storage[line].size() > line) {
-         //loop through the floor to find a spot for the new tile
-         bool end = false;
-         Tile currentTile = Tile(TileType::RED);
-         int currentFloorTile = 0;
-         while (currentTile.getType() != TileType::NO_TILE || end) {
-            if (currentFloorTile < 6) {
-               currentTile = floor[currentFloorTile++];
-            }
-            else {
-               end = true;
-            }
-            //discard any tiles above 7
-         }
-
-         if (end == false) {
-            floor[currentFloorTile] = Tile(type);
-         }
+      if (currentTilesOnBuffer > line) {
+         addToFloorLine(type, 1);
       }
       else {
-         storage[line].push_back(Tile(type));
+         storage[line][currentTilesOnBuffer++] = Tile(type);
       }
    }
 }
+
+void PlayerWall::addToFloorLine(TileType type, int count) {
+   for (int i = 0; i < count; i++) {
+      if (tilesOnFloor < 7) {
+         floor[tilesOnFloor++] = Tile(type);
+      }
+      //if there are 7, discard
+   }
+}
+
 
 //will be complex, follow steps on the flowchart for scoring
 //vertical lines

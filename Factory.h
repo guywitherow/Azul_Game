@@ -11,6 +11,7 @@ class Factory {
    Factory();
    ~Factory();
    int removeTile(TileType type);
+   std::vector<Tile> getTiles();
    void addTile(Tile tile);
    void clearFactory();
    void printFactory();

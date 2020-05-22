@@ -12,7 +12,7 @@ class Player {
    ~Player();
 
    std::string getName();
-   PlayerWall getWall();
+   PlayerWall* getWall();
    int getScore();
 
    void setScore(int score);

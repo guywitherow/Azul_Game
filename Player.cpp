@@ -17,8 +17,8 @@ std::string Player::getName() {
    return playerName;
 }
 
-PlayerWall Player::getWall() {
-   return *wall;
+PlayerWall* Player::getWall() {
+   return wall;
 }
 
 int Player::getScore() {

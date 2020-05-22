@@ -12,18 +12,16 @@
 #include "Bag.h"
 #include <vld.h>
 
-
-
 void printMenu();
 void printCredits();
 void printReferenceBoard();
 void loadGame();
 void saveGame(std::string saveName);
 void game(int seed);
-void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* player);
+void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player);
 void loadData(std::string, std::string, int);
 void loadPlayer(std::string, int, int);
-void printFactories(Factory* factories[NUM_FACTORIES], Factory* table);
+void printFactories(Factory* (*factories)[NUM_FACTORIES], Factory* table);
 void printPlayerWall(Player* player);
 std::vector<std::string> takeUserInput();
 
@@ -89,11 +87,7 @@ void game(int seed) {
    Factory* factories[NUM_FACTORIES];
    for (int i = 0; i < NUM_FACTORIES; i++) {
       factories[i] = new Factory();
-      for (int j = 0; j < 4; j++) {
-         factories[i]->addTile(bag->getTopTile());
-      }
    }
-
    //player names
 
    std::cout << "Enter a name for player 1" << std::endl << std::endl;
@@ -106,26 +100,57 @@ void game(int seed) {
 
    std::cout << "Let's Play!" << std::endl << std::endl;
 
-   bool tileLoop = true;
-   while (tileLoop) {
-      printFactories(factories, table);
-      printPlayerWall(player1);
-      takePlayerTurn(factories, table, player1);
-      //selection
-      //player 2 loops
-
-      //loop until we have no tiles on table
-      //factories check
+   bool roundLoop = true;
+   while (roundLoop) {
+      //ensure clear factories, then fill
       for (int i = 0; i < NUM_FACTORIES; i++) {
-         //check all factories
-         //tileLoop = factories[i].hasTiles()
-         //if (tileLoop == true) {
-         //    i = 5;
-         //}
+         factories[i]->clearFactory();
+         for (int j = 0; j < 4; j++) {
+            factories[i]->addTile(bag->getTopTile());
+         }
       }
-      tileLoop = false;
+      //ensure clean table, add first player tile
+      table->clearFactory();
+      table->addTile(Tile(TileType::FIRST_PLAYER));
 
-      //    //give player who takes from table first the "first player tag"
+
+      bool tileLoop = true;
+      while (tileLoop) {
+         printFactories(&factories, table);
+         printPlayerWall(player1);
+         takePlayerTurn(&factories, table, player1);
+         //selection
+         //player 2 loops
+         printFactories(&factories, table);
+         printPlayerWall(player2);
+         //loop until we have no tiles on table
+         //factories check
+
+         int factoryTileCount = 0;
+         int tableTileCount = 0;
+
+         tableTileCount = table->getTileCount();
+         for (int i = 0; i < NUM_FACTORIES; i++) {
+            //check all factories
+            factoryTileCount = factories[i]->getTileCount();
+            if (factoryTileCount != 0) {
+               i = 5;
+            }
+         }
+         //if any factory has tiles left, wait.
+         if (tableTileCount > 0 || factoryTileCount > 0) {
+            tileLoop = true;
+         }
+         else {
+            tileLoop = false;
+         }
+      }
+
+      //SCORE HERE
+
+
+      //stop looping the rounds when a player wins
+      roundLoop = false;
    }
    std::cout << "Game Over." << std::endl;
    delete bag;
@@ -137,8 +162,7 @@ void game(int seed) {
    }
 }
 
-
-void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* player) {
+void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player) {
    bool valid = false;
    while (!valid) {
       std::vector<std::string> turn = takeUserInput();
@@ -158,7 +182,6 @@ void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* p
             else {
                //check turn input is valid
                int factory = -1;
-               std::string tileStr = "Z";
                int bufferLine = -1;
 
                //factory int interp
@@ -179,7 +202,7 @@ void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* p
                }
 
                //change tile string to TileType
-               TileType userTileType = Tile::stringToType(tileStr);
+               TileType userTileType = Tile::stringToType(turn.at(2));
 
                std::string errorCheck = "";
 
@@ -187,20 +210,23 @@ void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* p
                //errorCheck += checkValidTile(tileChar);
                //errorCheck += checkValidBuffer(bufferLine);
 
-               if (errorCheck != "") {
+               if (errorCheck == "") {
                   int tiles = -1;
                   if (factory == 0) {
                      tiles = table->removeTile(userTileType);
+                     if (table->removeTile(TileType::FIRST_PLAYER) != 0) {
+                        player->getWall()->addToFloorLine(TileType::FIRST_PLAYER, 1);
+                     }
                   }
                   else {
-                     tiles = factories[factory]->removeTile(userTileType);
+                     tiles = (*factories)[factory - 1]->removeTile(userTileType);
                   }
-
-                  std::cout << std::to_string(tiles) << std::endl;
 
                   if (tiles > 0) {
                      valid = true;
-                     player->getWall().addToStorageLine(userTileType, tiles, bufferLine);
+                     player->getWall()->addToStorageLine(userTileType, tiles, bufferLine);
+                     std::vector<Tile> moveToTable = (*factories)[factory]->getTiles();
+                     (*factories)[factory]->clearFactory();
                   }
                   else {
                      std::cout << "Factory number " + std::to_string(factory) + " has no tiles of type ";
@@ -230,16 +256,16 @@ void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* p
    
 }
 
-void printFactories(Factory* factories[NUM_FACTORIES], Factory* table) {
+void printFactories(Factory* (*factories)[NUM_FACTORIES], Factory* table) {
 
-   std::cout << "Factories: " << std::endl << "0:";
+   std::cout << "Factories: " << std::endl << "0: ";
    table->printFactory();
    std::cout << std::endl;
 
    for (int i = 0; i < NUM_FACTORIES; i++) {
       if (factories != nullptr) {
          std::cout << i + 1 << ": ";
-         factories[i]->printFactory();
+         (*factories)[i]->printFactory();
       }
       std::cout << std::endl;
    }
@@ -248,7 +274,7 @@ void printFactories(Factory* factories[NUM_FACTORIES], Factory* table) {
 
 void printPlayerWall(Player* player) {
    std::string playerName = player->getName();
-   std::string wallString = player->getWall().getPlayerWallString();
+   std::string wallString = player->getWall()->getPlayerWallString();
 
    std::cout << "Mosaic for " << playerName << ":" << std::endl;
    std::cout << wallString << std::endl;
@@ -309,9 +335,13 @@ std::vector<std::string> takeUserInput() {
    std::istringstream stream{input};
    using StrIt = std::istream_iterator<std::string>;
    std::vector<std::string> container{ StrIt{stream}, StrIt{} };
+
+   if (container.size() == 0) {
+      container.push_back(" ");
+   }
+
    return container;
 }
-
 
 void saveGame(std::string saveName) {
 
