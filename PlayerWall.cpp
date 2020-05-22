@@ -107,8 +107,31 @@ std::string PlayerWall::getPlayerWallString() {
 }
 
 //add tiles to storage line, any excess go to the floor
-void PlayerWall::addToStorageLine(Tile* tiles, int line) {
+void PlayerWall::addToStorageLine(TileType type, int count, int line) {
+   for (int i = 0; i < count; i++) {
+      if (storage[line].size() > line) {
+         //loop through the floor to find a spot for the new tile
+         bool end = false;
+         Tile currentTile = Tile(TileType::RED);
+         int currentFloorTile = 0;
+         while (currentTile.getType() != TileType::NO_TILE || end) {
+            if (currentFloorTile < 6) {
+               currentTile = floor[currentFloorTile++];
+            }
+            else {
+               end = true;
+            }
+            //discard any tiles above 7
+         }
 
+         if (end == false) {
+            floor[currentFloorTile] = Tile(type);
+         }
+      }
+      else {
+         storage[line].push_back(Tile(type));
+      }
+   }
 }
 
 //will be complex, follow steps on the flowchart for scoring

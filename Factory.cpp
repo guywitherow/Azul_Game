@@ -24,7 +24,6 @@ int Factory::removeTile(TileType type) {
          tiles.erase(i);
       }
    }
-   tileCount--;
    return tileCount;
 }
 

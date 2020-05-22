@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Factory.h"
 #include "Types.h"
+#include "Tile.h"
 #include "Bag.h"
 #include <vld.h>
 
@@ -105,27 +106,27 @@ void game(int seed) {
 
    std::cout << "Let's Play!" << std::endl << std::endl;
 
-    bool tileLoop = true;
-    while (tileLoop) {
-        printFactories(factories, table);
-        printPlayerWall(player1);
-        takePlayerTurn(factories, table, player1);
-       //selection
-       //player 2 loops
+   bool tileLoop = true;
+   while (tileLoop) {
+      printFactories(factories, table);
+      printPlayerWall(player1);
+      takePlayerTurn(factories, table, player1);
+      //selection
+      //player 2 loops
 
-       //loop until we have no tiles on table
-       //factories check
-       for (int i = 0; i < NUM_FACTORIES; i++) {
-          //check all factories
-          //tileLoop = factories[i].hasTiles()
-          //if (tileLoop == true) {
-          //    i = 5;
-          //}
-       }
-       tileLoop = false;
+      //loop until we have no tiles on table
+      //factories check
+      for (int i = 0; i < NUM_FACTORIES; i++) {
+         //check all factories
+         //tileLoop = factories[i].hasTiles()
+         //if (tileLoop == true) {
+         //    i = 5;
+         //}
+      }
+      tileLoop = false;
 
-   //    //give player who takes from table first the "first player tag"
-    }
+      //    //give player who takes from table first the "first player tag"
+   }
    std::cout << "Game Over." << std::endl;
    delete bag;
    delete player1;
@@ -138,23 +139,95 @@ void game(int seed) {
 
 
 void takePlayerTurn(Factory* factories[NUM_FACTORIES], Factory* table, Player* player) {
-   std::vector<std::string> turn = takeUserInput();
-   std::string command = turn.at(0);
-   if (command == "help" || command == "h") {
-      std::cout << "This is where you take your turn. Use the command 'turn', ";
-      std::cout << "along with your selections to take your turn!" << std::endl;
-      std::cout << "eg: '> turn 3 L 3' moves all light blue tiles, from ";
-      std::cout << "factory 3, and puts them in storage line 3" << std::endl;
+   bool valid = false;
+   while (!valid) {
+      std::vector<std::string> turn = takeUserInput();
+      if (turn.size() > 0) {
+         std::string command = turn.at(0);
+         if (command == "help" || command == "h") {
+            std::cout << "This is where you take your turn. Use the command 'turn', ";
+            std::cout << "along with your selections to take your turn!" << std::endl;
+            std::cout << "eg: '> turn 3 L 3' moves all light blue tiles, from ";
+            std::cout << "factory 3, and puts them in storage line 3" << std::endl;
+         }
+         else if (command == "turn") {
+            if (turn.size() != 4) {
+               std::cout << "Please use the command format, 'turn <factory> <color_code> <buffer>" << std::endl;
+               std::cout << turn.at(1) << std::endl;
+            }
+            else {
+               //check turn input is valid
+               int factory = -1;
+               std::string tileStr = "Z";
+               int bufferLine = -1;
+
+               //factory int interp
+               try {
+                  factory = std::stoi(turn.at(1));
+               }
+               //catch oob or invalid
+               catch (...) {
+                  std::cout << "Please input a valid factory ID, between 0 and 5." << std::endl;
+               }
+               //bufferline in interp
+               try {
+                  bufferLine = std::stoi(turn.at(3));
+               }
+               //same as above
+               catch (...) {
+                  std::cout << "Please input a valid buffer ID, between 1 and 5." << std::endl;
+               }
+
+               //change tile string to TileType
+               TileType userTileType = Tile::stringToType(tileStr);
+
+               std::string errorCheck = "";
+
+               //errorCheck += checkValidFactory(factory);
+               //errorCheck += checkValidTile(tileChar);
+               //errorCheck += checkValidBuffer(bufferLine);
+
+               if (errorCheck != "") {
+                  int tiles = -1;
+                  if (factory == 0) {
+                     tiles = table->removeTile(userTileType);
+                  }
+                  else {
+                     tiles = factories[factory]->removeTile(userTileType);
+                  }
+
+                  std::cout << std::to_string(tiles) << std::endl;
+
+                  if (tiles > 0) {
+                     valid = true;
+                     player->getWall().addToStorageLine(userTileType, tiles, bufferLine);
+                  }
+                  else {
+                     std::cout << "Factory number " + std::to_string(factory) + " has no tiles of type ";
+                     std::cout << Tile::tileToString(userTileType) << ". Please make a valid selection.";
+                     //the player has chosen to take a type of tile that is not in that factory
+                  }
+
+               }
+               else {
+                  //some blah about valid tile types, as well as buffers and factories
+               }
+            }
+         }
+         else if (command == "quit") {
+            //exit the game
+         }
+         else if (command == "save") {
+            //save the game
+         }
+      }
+      else {
+         std::cout << "Please input a command." << std::endl;
+      }
    }
-   else if (command == "turn") {
-      //tkae a player's turn
-   }
-   else if (command == "quit") {
-      //exit the game
-   }
-   else if (command == "save") {
-      //save the game
-   }
+   
+      
+   
 }
 
 void printFactories(Factory* factories[NUM_FACTORIES], Factory* table) {
@@ -227,18 +300,16 @@ void printReferenceBoard() {
 
 std::vector<std::string> takeUserInput() {
    //TODO Ensure user input is valid
-   std::string input;
+   std::string input = "";
    //user input space is indicated by an arrow
    std::cout << std::endl << "> ";
-   std::cin >> input;
+   std::getline(std::cin,input);
 
    //break string into arguments
-   std::stringstream stream(input);
-   std::istream_iterator<std::string> begin(stream);
-   std::istream_iterator<std::string> end;
-   std::vector<std::string> arguments(begin, end);
-
-   return arguments;
+   std::istringstream stream{input};
+   using StrIt = std::istream_iterator<std::string>;
+   std::vector<std::string> container{ StrIt{stream}, StrIt{} };
+   return container;
 }
 
 

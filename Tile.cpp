@@ -12,32 +12,38 @@ Tile::~Tile() {
    //tile only has tiletype which is a char, automaticlly deleted
 }
 
+//prints a string of the given tile
 std::string Tile::tileToString() {
+   return tileToString(type);
+}
+
+std::string Tile::tileToString(TileType givenType) {
    std::string typeString;
-   if (type == TileType::RED) {
+   if (givenType == TileType::RED) {
       typeString = "Red";
    }
-   else if (type == TileType::YELLOW) {
+   else if (givenType == TileType::YELLOW) {
       typeString = "Yellow";
    }
-   else if (type == TileType::LIGHT_BLUE) {
+   else if (givenType == TileType::LIGHT_BLUE) {
       typeString = "Light Blue";
    }
-   else if (type == TileType::DARK_BLUE) {
+   else if (givenType == TileType::DARK_BLUE) {
       typeString = "Dark Blue";
    }
-   else if (type == TileType::BLACK) {
+   else if (givenType == TileType::BLACK) {
       typeString = "Black";
    }
-   else if (type == TileType::NO_TILE) {
+   else if (givenType == TileType::NO_TILE) {
       typeString = "No Tile";
    }
-   else if (type == TileType::FIRST_PLAYER) {
+   else if (givenType == TileType::FIRST_PLAYER) {
       typeString = "First Player Tile";
    }
    return typeString;
 }
 
+//returns a char of the given tile
 char Tile::tileToChar() {
    char typeChar = ' ';
    if (type == TileType::RED) {
@@ -64,6 +70,32 @@ char Tile::tileToChar() {
    return typeChar;
 }
 
+//gets the type of the current tile
 TileType Tile::getType() {
    return type;
+}
+
+//takes a string of a character and gives back a matching type
+TileType Tile::stringToType(std::string givenType) {
+
+   //THIS ONLY NEEDS TO INTERP USER INPUT, NO FIRST TILE OR
+   //NO_TILE NEEDED
+   TileType typeTile = TileType::NO_TILE;
+   if (givenType == "R") {
+      typeTile = TileType::RED;
+   }
+   else if (givenType == "Y") {
+      typeTile = TileType::YELLOW;
+   }
+   else if (givenType == "L") {
+      typeTile = TileType::LIGHT_BLUE;
+   }
+   else if (givenType == "B") {
+      typeTile = TileType::DARK_BLUE;
+   }
+   else if (givenType == "U") {
+      typeTile = TileType::BLACK;
+   }
+
+   return typeTile;
 }

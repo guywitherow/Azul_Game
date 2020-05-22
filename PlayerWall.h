@@ -17,7 +17,7 @@ public:
    Tile* getFloorLine();
 
    std::string getPlayerWallString();
-   void addToStorageLine(Tile* tiles, int line);
+   void addToStorageLine(TileType type, int count, int line);
 
    void moveStorageToWall();
 

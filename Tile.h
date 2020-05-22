@@ -21,7 +21,10 @@ class Tile {
    std::string tileToString();
    char tileToChar();
 
+   static std::string tileToString(TileType givenType);
+
    TileType getType();
+   static TileType stringToType(std::string type);
 
    private:
    TileType type;
