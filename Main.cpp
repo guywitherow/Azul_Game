@@ -199,6 +199,7 @@ void game(int seed, bool load) {
       
       round++;
    }
+   std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
 
    int player1Final = player1->getWall()->endOfGameScore();
    int player2Final = player2->getWall()->endOfGameScore();
@@ -206,10 +207,12 @@ void game(int seed, bool load) {
    player1->setScore(player1->getScore() + player1Final);
    player2->setScore(player2->getScore() + player2Final);
 
-   std::cout << "Final Scores:" << std::endl;
+   std::cout << "Final Boards:" << std::endl;
 
-   std::cout << "Player 1: " << std::to_string(player1->getScore()) << std::endl;
-   std::cout << "Player 2: " << std::to_string(player2->getScore()) << std::endl;
+   printPlayerWall(player1);
+   std::cout << "Player 1 Score: " << player1->getScore() << std::endl << std::endl;
+   printPlayerWall(player2);
+   std::cout << "Player 2 Score: " << player2->getScore() << std::endl << std::endl;
 
    std::cout << std::endl << std::endl << "Game Over." << std::endl << std::endl;
    delete bag;

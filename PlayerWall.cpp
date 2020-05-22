@@ -203,19 +203,23 @@ int PlayerWall::moveStorageToWall() {
                absoluteTileNumber = 5 + absoluteTileNumber;
             }
             
-            std::cout << tiles[absoluteTileNumber] << " " << std::to_string(absoluteTileNumber) << std::endl;
             if (addToWall == Tile::charToTile(tiles[absoluteTileNumber])) {
                wall[i][j] = Tile(addToWall);
-               std::cout << std::to_string(i) << "," << std::to_string(j) << wall[i][j].tileToString() << std::endl;
                scoreToAdd = checkScore(i, j);
 
             }
          }
-         std::cout << std::endl;
          score += scoreToAdd;
 
          storage[i].clear();
          resetStorageLine(i);
+      }
+   }
+
+   for (int i = 0; i < FLOOR_DIM; i++) {
+      if (floor[i].getType() != TileType::NO_TILE) {
+         score--;
+         floor[i] = Tile();
       }
    }
 
@@ -282,6 +286,7 @@ int PlayerWall::checkScore(int y, int x) {
       }
       score += streak;
       loopNum++;
+      tileLine.clear();
    }
    
    return score;
