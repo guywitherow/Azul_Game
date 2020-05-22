@@ -19,7 +19,8 @@ void Factory::printFactory() {
    
 int Factory::removeTile(TileType type) {
    int removedTileCount = 0;
-   int toDelete[5];
+   std::vector<int> toDelete;
+   toDelete.resize(16);
    int currentTile = 0;
    for (auto i = tiles.begin(); i != tiles.end(); i++) {
       if (i->getType() == type) {
@@ -37,7 +38,6 @@ int Factory::removeTile(TileType type) {
    if (removedTileCount > 0) {
       tileCount = 0;
    }
-
    return removedTileCount;
 }
 

@@ -226,10 +226,7 @@ void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player
                      valid = true;
                      player->getWall()->addToStorageLine(userTileType, tiles, bufferLine);
                      std::vector<Tile> moveToTable;
-                     if (factory == -1) {
-                        moveToTable = table->getTiles();
-                     }
-                     else {
+                     if (factory != -1) {
                         moveToTable = (*factories)[factory]->getTiles();
                         (*factories)[factory]->clearFactory();
                         for (int i = 0; i < TILES_PER_FAC; i++) {
