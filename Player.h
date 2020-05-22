@@ -16,6 +16,7 @@ class Player {
       int getScore();
 
       void load(std::string data, int dataID);
+      std::string getDataString(int data);
 
       void setScore(int score);
       void setWall(PlayerWall* wall);

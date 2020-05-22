@@ -72,3 +72,11 @@ int Factory::getTileCount() {
 
    return tileCount;
 }
+
+std::string Factory::getTilesString() {
+   std::string returnString = "";
+   for (int i = 0; i < tiles.size(); i++) {
+      returnString += tiles.at(i).tileToChar();
+   }
+   return returnString;
+}

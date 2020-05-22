@@ -17,6 +17,8 @@ class Factory {
    void printFactory();
    int getTileCount();
 
+   std::string getTilesString();
+
    void load(std::string data);
 
    private:

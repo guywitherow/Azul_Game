@@ -20,6 +20,16 @@ int Bag::size() {
    return bagLinkedList->getSize();
 }
 
+std::string Bag::getAllTiles() {
+   Tile* current = bagLinkedList->getTile(0);
+   std::string returnString = "";
+   for (int i = 0; i < size(); i++) {
+      current = bagLinkedList->getTile(i);
+      returnString += current->tileToChar();
+   }
+   return returnString;
+}
+
 void Bag::load(std::string data) {
    for (unsigned i = 0; i < data.length(); ++i)
    {

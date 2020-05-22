@@ -15,12 +15,14 @@ void printMenu();
 void printCredits();
 void printReferenceBoard();
 int loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2);
-void saveGame(std::string saveName);
+void saveGame(std::string saveName, Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2);
 void game(int seed, bool load);
-void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player);
+void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player, Bag* bag, Player* player2);
 void printFactories(Factory* (*factories)[NUM_FACTORIES], Factory* table);
 void printPlayerWall(Player* player);
 std::vector<std::string> takeUserInput();
+std::vector<std::string> takeUserInput(Factory* (*factories)[NUM_FACTORIES],
+   Factory* table, Bag* bag, Player* player1, Player* player2);
 
 int main(int argc, char const *argv[])
 {
@@ -61,9 +63,6 @@ int main(int argc, char const *argv[])
          //quit
          quit = true;
       } 
-      else if (input == "save") {
-         saveGame("bigtest");
-      }
       else {
          //bad input, try again
          std::cout << "Choice not recognised, please choose an option from the list" << std::endl;
@@ -135,10 +134,12 @@ void game(int seed, bool load) {
       turn = 0;
       while (tileLoop) {
          Player* currentPlayer = player1;
+         Player* secondPlayer = player2;
          if (turn % 2 == 0) {
             currentPlayer = player2;
+            secondPlayer = player1;
          }
-         takePlayerTurn(&factories, table, currentPlayer);
+         takePlayerTurn(&factories, table, currentPlayer,bag, secondPlayer );
          
          std::cout << "Here is your board after that move." << std::endl;
 
@@ -224,12 +225,13 @@ void game(int seed, bool load) {
    }
 }
 
-void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player) {
+void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player, Bag* bag, Player* player2) {
    printFactories(factories, table);
    printPlayerWall(player);
    bool valid = false;
    while (!valid) {
-      std::vector<std::string> turn = takeUserInput();
+      std::vector<std::string> turn = takeUserInput(factories,
+         table, bag, player, player2);
       if (turn.size() > 0) {
          std::string command = turn.at(0);
          if (command == "help" || command == "h") {
@@ -407,15 +409,57 @@ void printReferenceBoard() {
    std::cout << "Please make moves using the format 'turn <factory number> <tile color letter> <storage row>" << std::endl << std::endl;
 }
 
+std::vector<std::string> takeUserInput(Factory* (*factories)[NUM_FACTORIES], 
+   Factory* table, Bag* bag, Player* player1, Player* player2) {
+   //TODO Ensure user input is valid
+   bool saveCheck = true;
+   std::string input = "";
+   std::vector<std::string> container;
+   while (saveCheck) {
+      
+      //user input space is indicated by an arrow
+      std::cout << std::endl << "> ";
+      std::getline(std::cin, input);
+
+      //break string into arguments
+      std::istringstream stream{ input };
+      using StrIt = std::istream_iterator<std::string>;
+      std::vector<std::string> container{ StrIt{stream}, StrIt{} };
+
+      if (container.size() == 0) {
+         container.push_back(" ");
+      }
+
+      if (container.at(0) == "save") {
+         if (container.size() == 2) {
+            saveGame(container.at(1), factories, table, bag, player1, player2);
+            std::cout << "Saved game." << std::endl << std::endl << "Resuming" << std::endl;
+         }
+         else {
+         }
+
+      }
+      else {
+         saveCheck = false;
+      }
+   }
+   
+
+   return container;
+}
+
 std::vector<std::string> takeUserInput() {
    //TODO Ensure user input is valid
+
    std::string input = "";
+
+
    //user input space is indicated by an arrow
    std::cout << std::endl << "> ";
-   std::getline(std::cin,input);
+   std::getline(std::cin, input);
 
    //break string into arguments
-   std::istringstream stream{input};
+   std::istringstream stream{ input };
    using StrIt = std::istream_iterator<std::string>;
    std::vector<std::string> container{ StrIt{stream}, StrIt{} };
 
@@ -423,56 +467,43 @@ std::vector<std::string> takeUserInput() {
       container.push_back(" ");
    }
 
+
+
    return container;
 }
 
-void saveGame(std::string saveName) {
+void saveGame(std::string saveName, Factory* (*factories)[NUM_FACTORIES], 
+   Factory* table, Bag* bag, Player* player1, Player* player2) {
 
    std::ofstream savefile;
    savefile.open(saveName + ".txt");
    int currentLine = 0;
-
+   int dataIndex = 0;
    while (currentLine <= 35) {
-      std::string data = "a";
+      std::string data = "";
 
       if (currentLine == 0) {
-         // data = getBag();
+         data = bag->getAllTiles();
       }
-      else if (currentLine == 1) {
-         // data = getLid();
+      else if (currentLine >= 1 && currentLine <= 5) {
+         dataIndex = currentLine - 1;
+         data = (*factories)[dataIndex]->getTilesString();
       }
-      else if (currentLine >= 2 && currentLine <= 6) {
-         // data = getFactory(currentLine - 2);
+      else if (currentLine == 6) {
+         data = table->getTilesString();
       }
-      else if (currentLine == 7) {
-         // data = getTable();
+      else if (currentLine >= 7 && currentLine <= 32) {
+         //13 lines of data for a player, * 2
+         dataIndex = currentLine - 7;
+         if (dataIndex / 13 == 0) {
+            data = player1->getDataString(dataIndex);
+         }
+         else {
+            data = player2->getDataString(dataIndex % 13);
+         }
       }
-      else if (currentLine >= 8 && currentLine <= 35) {
-         //14 lines of data for a player, * 2
-         //Player player = getPlayer((currentLine - 7) / 14);
-         int currentDataPoint = (currentLine - 7) % 14;
-         if (currentDataPoint == 0) {
-            //data = player.getName();
-         }
-         else if (currentDataPoint == 1) {
-            //data = player.getID()????
-         }
-         else if (currentDataPoint >= 2 && currentDataPoint <= 6) {
-            //data = player.getBufferLine(currentDataPoint-3);
-         }
-         else if (currentDataPoint >= 7 && currentDataPoint <= 11) {
-            //data = player.getWallLine(currentDataPoint-8);
-         }
-         else if (currentDataPoint == 12) {
-            //data = player.getFloor();
-         }
-         else if (currentDataPoint == 13) {
-            //data = player.getScore();
-         }
-
-      }
-      else if (currentLine == 36) {
-         // data = getCurrentPlayerID();
+      else if (currentLine == 33) {
+         data = "0";
       }
 
       savefile << data + "\n";

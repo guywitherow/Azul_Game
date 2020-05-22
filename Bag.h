@@ -18,7 +18,7 @@ public:
    void shuffle();
    void load(std::string data);
    Tile getTopTile();
-   LinkedList getAllTiles();
+   std::string getAllTiles();
 
 private:
 

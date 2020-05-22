@@ -244,8 +244,8 @@ bool PlayerWall::checkIfDone() {
 }
 
 void PlayerWall::resetStorageLine(int line) {
-
-   storage[line].resize(line + 1, Tile());
+   line = line + 1;
+   storage[line -1].resize(line, Tile());
 
 }
 
