@@ -14,9 +14,8 @@
 void printMenu();
 void printCredits();
 void printReferenceBoard();
-void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2);
+int loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2);
 void saveGame(std::string saveName);
-void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2);
 void game(int seed, bool load);
 void takePlayerTurn(Factory* (*factories)[NUM_FACTORIES], Factory* table, Player* player);
 void printFactories(Factory* (*factories)[NUM_FACTORIES], Factory* table);
@@ -76,7 +75,7 @@ int main(int argc, char const *argv[])
 
 void game(int seed, bool load) {
    std::cout << "Starting a new game" << std::endl;
-
+   int turn = -1;
    //bag init
    Bag* bag = new Bag(seed);
 
@@ -90,10 +89,16 @@ void game(int seed, bool load) {
    Player* player1 = new Player("");
    Player* player2 = new Player("");
    if (load) {
-      loadGame(&factories,table,bag,player1,player2);
-      std::cout << "Loaded" << std::endl << std::endl;
+      turn = loadGame(&factories,table,bag,player1,player2);
+      if (turn == -1) {
+         load = false;
+         std::cout << "Load Failed. Starting a fresh game." << std::endl;
+      }
+      else {
+         std::cout << "Loaded" << std::endl << std::endl;
+      }
    }
-   else {
+   if (!load) {
       bag->fill();
       bag->shuffle();
 
@@ -131,6 +136,10 @@ void game(int seed, bool load) {
       bool tileLoop = true;
       while (tileLoop) {
          //players take their turns
+         if (turn == 2) {
+            takePlayerTurn(&factories, table, player2);
+            turn = -1;
+         }
          takePlayerTurn(&factories, table, player1);
          takePlayerTurn(&factories, table, player2);
          //loop until we have no tiles on table
@@ -430,12 +439,14 @@ void saveGame(std::string saveName) {
 
 }
 
-void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2) {
+int loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Player* player1, Player* player2) {
    //get user input for which file to load
    std::string input;
    std::cout << "Enter the name of the file which you want to load."
       << std::endl << "> ";
    std::cin >> input;
+
+   int turnToReturn = -1;
 
    //open specified file
    std::string line;
@@ -457,25 +468,31 @@ void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Pl
             if (currentLine == 0) {
                bag->load(line);
             }
-            else if (currentLine >= 2 && currentLine <= 6) {
-               dataIndex = currentLine - 2;
+            else if (currentLine >= 1 && currentLine <= 5) {
+               dataIndex = currentLine - 1;
                (*factories)[dataIndex]->load(line);
             }
-            else if (currentLine == 7) {
+            else if (currentLine == 6) {
                table->load(line);
             }
-            else if (currentLine >= 8 && currentLine <= 35) {
-               //14 lines of data for a player, * 2
-               dataIndex = currentLine - 8;
-               if (dataIndex / 14 == 0) {
-                  //player1->load(line, dataIndex % 14);
+            else if (currentLine >= 7 && currentLine <= 32) {
+               //13 lines of data for a player, * 2
+               dataIndex = currentLine - 7;
+               if (dataIndex / 13 == 0) {
+                  player1->load(line, dataIndex % 13);
                }
                else {
-                  //player2->load(line, dataIndex % 14);
+                  player2->load(line, dataIndex % 13);
                }
             }
-            else if (currentLine == 36) {
-               //currentTurn = line;
+            else if (currentLine == 33) {
+               try {
+                  turnToReturn = std::stoi(line);
+               }
+               catch (...) {
+                  std::cout << "Current Turn could not be read, assuming player 1" << std::endl;
+                  turnToReturn = 1;
+               }
             }
             currentLine++;
          }
@@ -483,6 +500,6 @@ void loadGame(Factory* (*factories)[NUM_FACTORIES], Factory* table, Bag* bag, Pl
 
       loadFile.close();
    }
-   else std::cout << "Unable to open file";
-
+   else std::cout << "Unable to open file" << std::endl;
+   return turnToReturn;
 }

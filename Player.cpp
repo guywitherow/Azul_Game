@@ -30,24 +30,44 @@ void Player::load(std::string data, int dataID) {
    if (dataID == 0) {
       setName(data);
    }
-   else if (dataID >= 2 && dataID <= 6) {
+   else if (dataID >= 1 && dataID <= 5) {
       std::vector<Tile> tilesToAdd;
       for (unsigned i = 0; i < data.length(); ++i)
       {
          tilesToAdd.push_back(Tile::charToTile(data.at(i)));
       }
 
-
-      getWall()->setBufferLine(tilesToAdd, dataID -3);
+      getWall()->setBufferLine(tilesToAdd, dataID - 1);
    }
-   else if (dataID >= 7 && dataID <= 11) {
-      //player.setWallLine(line,dataLine-8);
+   else if (dataID >= 6 && dataID <= 10) {
+      std::vector<Tile> tilesToAdd;
+      for (unsigned i = 0; i < data.length(); ++i)
+      {
+         tilesToAdd.push_back(Tile::charToTile(data.at(i)));
+      }
+
+      getWall()->setWallLine(tilesToAdd, dataID - 6);
+   }
+   else if (dataID == 11) {
+      std::vector<Tile> tilesToAdd;
+      for (int i = 0; i < data.length(); i++) {
+         TileType current = Tile::charToTile(data.at(i));
+         if (current == TileType::NO_TILE) {
+            i = FLOOR_DIM;
+         }
+         else {
+            getWall()->addToFloorLine(current, 1);
+         }
+      }
+      
    }
    else if (dataID == 12) {
-      //player.setFloor();
-   }
-   else if (dataID == 13) {
-      //player.setScore();
+      try {
+         score = std::stoi(data);
+      }
+      catch (...) {
+         score = 0;
+      }
    }
 
 }

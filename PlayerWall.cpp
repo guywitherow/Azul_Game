@@ -33,12 +33,16 @@ std::vector<Tile> PlayerWall::getStorageLine(int line) {
    return storage[line];
 }
 
-void PlayerWall::setBufferLine(std::vector<Tile>, int line) {
-
+void PlayerWall::setBufferLine(std::vector<Tile> added, int line) {
+   for (int i = 0; i < line; i++) {
+      storage[line - 1][i] = added.at(i);
+   }
 }
 
-void PlayerWall::setWallLine(std::vector<Tile>, int line) {
-
+void PlayerWall::setWallLine(std::vector<Tile> added, int line) {
+   for (int i = 0; i < WALL_DIM; i++) {
+      wall[line][i] = added.at(i);
+   }
 }
 
 //get a line of the wall by direction
@@ -150,6 +154,9 @@ void PlayerWall::addToFloorLine(TileType type, int count) {
       if (tilesOnFloor < 7) {
          floor[tilesOnFloor++] = Tile(type);
       }
+      if (type == TileType::NO_TILE) {
+         tilesOnFloor--;
+      }
       //if there are 7, discard
    }
 }
@@ -162,7 +169,7 @@ void PlayerWall::addToFloorLine(TileType type, int count) {
 //if a complete horizontal line is reached, we need to flag game over
 //(BASICLY A SCORE FUNCTION)
 void PlayerWall::moveStorageToWall() {
-
+   std::cout << "OOYOYOOYOYOY" << std::endl;
 }
 
 

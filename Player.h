@@ -8,26 +8,24 @@
 class Player {
 
    public:
-   Player(std::string name);
-   ~Player();
+      Player(std::string name);
+      ~Player();
 
-   std::string getName();
-   PlayerWall* getWall();
-   int getScore();
+      std::string getName();
+      PlayerWall* getWall();
+      int getScore();
 
-   void load(std::string data, int dataID);
+      void load(std::string data, int dataID);
 
-   void setScore(int score);
-   void setWall(PlayerWall* wall);
-   void setName(std::string name);
+      void setScore(int score);
+      void setWall(PlayerWall* wall);
+      void setName(std::string name);
 
    private:
 
-   PlayerWall* wall;
-   std::string playerName;
-   int score;
-
-
+      PlayerWall* wall;
+      std::string playerName;
+      int score = 0;
 
 };
 

@@ -71,7 +71,7 @@ char Tile::tileToChar() {
 }
 
 TileType Tile::charToTile(char givenChar) {
-   TileType typeReturn;
+   TileType typeReturn = TileType::NO_TILE;
    if (givenChar == 'R') {
       typeReturn = TileType::RED;
    }
