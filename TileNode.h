@@ -2,9 +2,11 @@
 #define TILENODE_H
 
 #include "Tile.h"
+#include <string>
 
 class TileNode
 {
+
 public:
     //Constructor
     TileNode(Tile *tileData, TileNode *nextTileNode);
